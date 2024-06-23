@@ -5,11 +5,14 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
-[dependencies]
-bevy = "0.13"
-
 [profile.dev]
 opt-level = 1
 
 [profile.dev.package."*"]
 opt-level = 3
+
+[dependencies]
+bevy = "0.13"
+bevy_editor_pls = "*"
+uuid = "1.8"
+rand = "0.8.5"
