@@ -1,6 +1,6 @@
 pub mod api;
 
-use crate::common::{ObjectId, ObjectRef};
+use crate::utils::{ObjectId, ObjectRef};
 use bevy::math::primitives::Cuboid;
 use bevy::prelude::*;
 use rand::{thread_rng, Rng};

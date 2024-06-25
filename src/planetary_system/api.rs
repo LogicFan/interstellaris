@@ -1,4 +1,4 @@
-use crate::common::ObjectRef;
+use crate::utils::ObjectRef;
 use bevy::prelude::Component;
 
 /// Determine which coordinate system the entity is using. If it's None, then

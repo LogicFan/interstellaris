@@ -1,4 +1,4 @@
-use crate::common::*;
+use crate::utils::*;
 use crate::planetary_system::api::Coordinate;
 use bevy::prelude::*;
 
