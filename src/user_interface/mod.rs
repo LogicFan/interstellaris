@@ -19,7 +19,11 @@ impl Plugin for UserInterfacePlugin {
             .add_systems(Startup, main_camera::spawn_main_camera)
             .add_systems(
                 PostUpdate,
-                (main_camera::move_main_camera, main_camera::zoom_main_camera)
+                (
+                    main_camera::move_main_camera,
+                    main_camera::zoom_main_camera,
+                    main_camera::rotate_main_camera,
+                )
                     .in_set(PrimaryCameraSystemSet),
             );
     }
