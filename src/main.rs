@@ -11,13 +11,12 @@ fn main() {
         .add_systems(PreStartup, init_main_camera)
         .add_systems(
             Startup,
-            (spawn_virtual_pointer, enable_virtual_pointer).chain(),
+            lock_cursor,
         )
         .add_systems(
             Update,
             (
-                update_virtual_pointer,
-                sync_virtual_pointer.after(update_virtual_pointer),
+                update_main_camera
             ),
         )
         .run();
