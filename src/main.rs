@@ -8,16 +8,7 @@ fn main() {
         .add_plugins(DefaultPlugins)
         .add_plugins(EditorPlugin::default())
         .add_systems(Startup, init_planetary_system)
-        .add_systems(PreStartup, init_main_camera)
-        .add_systems(
-            Startup,
-            lock_cursor,
-        )
-        .add_systems(
-            Update,
-            (
-                update_main_camera
-            ),
-        )
+        .add_systems(Startup, lock_cursor)
+        .add_plugins(UserInterfacePlugin)
         .run();
 }
