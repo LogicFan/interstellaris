@@ -16,6 +16,7 @@ pub struct UserInterfacePlugin;
 impl Plugin for UserInterfacePlugin {
     fn build(&self, app: &mut App) {
         app.insert_resource(settings::InputSettings::default())
+            .insert_resource(main_camera::PrimaryCameraConstraint::default())
             .add_systems(Startup, main_camera::spawn_main_camera)
             .add_systems(
                 PostUpdate,
