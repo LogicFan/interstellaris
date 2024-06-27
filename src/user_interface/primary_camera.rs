@@ -30,9 +30,9 @@
 //!     global map size and (x0, y0, z0) is the local map position in 
 //!     global map.
 //! 
-//! The path should be a spline and the motion should be accelerate - constant
-//! - decelerate. It should also be possible to terminate during the motion
-//! and smoothly move back the initial position.
+//! The path should be a spline and the motion should be 
+//! accelerate-constant-decelerate. It should also be possible to terminate 
+//! during the motion and smoothly move back the initial position.
 
 use super::settings::InputSettings;
 use bevy::input::mouse::{MouseMotion, MouseWheel};
