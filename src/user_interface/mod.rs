@@ -5,6 +5,7 @@ mod parsed_input;
 mod primary_camera;
 mod settings;
 
+use bevy::transform::TransformSystem;
 pub use cursor::lock_cursor;
 pub use cursor::release_cursor;
 pub use primary_camera::spawn_primary_camera;
@@ -19,7 +20,7 @@ impl Plugin for UserInterfacePlugin {
             .insert_resource(primary_camera::PrimaryCameraMotionMode::MenuScene)
             .add_systems(Startup, primary_camera::spawn_primary_camera)
             .add_systems(
-                PostUpdate,
+                Update,
                 (
                     primary_camera::free_motion::move_main_camera,
                     primary_camera::free_motion::zoom_main_camera,

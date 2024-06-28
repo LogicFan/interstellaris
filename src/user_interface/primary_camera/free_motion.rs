@@ -17,7 +17,7 @@ pub fn is_free_motion(r_motion_mode: Res<PrimaryCameraMotionMode>) -> bool {
 
 /// Control primary camera horizontal movement.
 /// # Schedule
-/// `PostUpdate`, if `is_free_motion` is true.
+/// `PostUpdate`, if `is_free_motion` is true, before transform propagation
 pub fn move_main_camera(
     mut q_camera_origin: Query<&mut Transform, With<PrimaryCameraOrigin>>,
     q_window: Query<&Window, With<PrimaryWindow>>,
@@ -127,9 +127,9 @@ pub fn rotate_main_camera(
         transform.rotate_z(delta.x);
 
         // rotate vertically, apply constraint
-        // TODO: optimize computation here
+        // TODO: optimize computation here, we can skip first and third 
+        // angle computation
         let (_, θ, _) = transform.rotation.to_euler(EulerRot::ZXY);
-        println!("theta {:?}", θ);
         delta.y = delta.y.clamp(-θ, max_θ - θ);
 
         transform.rotate_local_x(delta.y);

@@ -14,6 +14,7 @@ opt-level = 3
 [dependencies]
 bevy = "0.13"
 bevy_rapier3d = "*"
+bevy_mod_picking = "*"
 bevy_editor_pls = "*"
 uuid = "1.8"
 rand = "0.8.5"
