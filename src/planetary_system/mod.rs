@@ -34,7 +34,7 @@ pub fn init_planetary_system(mut commands: Commands, asset: Res<AssetServer>) {
     let mut rng = thread_rng();
     let mesh = asset.add(Cuboid::new(0.5, 0.5, 0.5).into());
     let material = asset.add(StandardMaterial {
-        emissive: Color::rgb_linear(10000.0, 10000.0, 10000.0),
+        emissive: Color::rgb_linear(1000.0, 1000.0, 1000.0),
         ..default()
     });
     for _ in 0..100 {
@@ -51,20 +51,7 @@ pub fn init_planetary_system(mut commands: Commands, asset: Res<AssetServer>) {
                 material: material.clone(),
                 ..default()
             },
-            // PickableBundle::default(),
+            PickableBundle::default(),
         ));
-    }
-}
-
-fn update_button_colors(
-    mut buttons: Query<(Option<&PickingInteraction>, &mut BackgroundColor), With<Button>>,
-) {
-    for (interaction, mut button_color) in &mut buttons {
-        *button_color = match interaction {
-            Some(PickingInteraction::Pressed) => Color::rgb(0.35, 0.75, 0.35),
-            Some(PickingInteraction::Hovered) => Color::rgb(0.25, 0.25, 0.25),
-            Some(PickingInteraction::None) | None => Color::rgb(0.15, 0.15, 0.15),
-        }
-        .into();
     }
 }

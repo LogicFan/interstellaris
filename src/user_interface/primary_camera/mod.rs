@@ -82,7 +82,7 @@ pub fn spawn_primary_camera(
     // TODO: the initial state should be menu scene, and switch to
     // free motion when we enter the game.
     *r_motion_mode = PrimaryCameraMotionMode::FreeMotion {
-        min_h: 30.0,
+        min_h: 10.0,
         max_h: 100.0,
         max_θ: PI / 3.0,
         max_r: 30.0,
