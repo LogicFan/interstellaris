@@ -1,33 +1,36 @@
+use crate::utils::AppState;
 use bevy::prelude::*;
+use menu::{despawn_menu_background, spawn_menu_background};
 
+mod camera;
 mod cursor;
-mod parsed_input;
-mod primary_camera;
+mod menu;
 mod settings;
 
-use bevy::transform::TransformSystem;
+pub use camera::spawn_primary_camera;
+pub use camera::CameraMotionSystemSet;
+pub use camera::PrimaryCamera;
 pub use cursor::lock_cursor;
 pub use cursor::release_cursor;
-pub use primary_camera::spawn_primary_camera;
-pub use primary_camera::PrimaryCamera;
-pub use primary_camera::PrimaryCameraSystemSet;
 
 pub struct UserInterfacePlugin;
 
 impl Plugin for UserInterfacePlugin {
     fn build(&self, app: &mut App) {
         app.insert_resource(settings::InputSettings::default())
-            .insert_resource(primary_camera::PrimaryCameraMotionMode::MenuScene)
-            .add_systems(Startup, primary_camera::spawn_primary_camera)
+            .insert_resource(camera::MotionMode::NoMotion)
+            .add_systems(Startup, camera::spawn_primary_camera)
             .add_systems(
                 Update,
                 (
-                    primary_camera::free_motion::move_main_camera,
-                    primary_camera::free_motion::zoom_main_camera,
-                    primary_camera::free_motion::rotate_main_camera,
+                    camera::move_main_camera,
+                    camera::zoom_main_camera,
+                    camera::rotate_main_camera,
                 )
-                    .run_if(primary_camera::free_motion::is_free_motion)
-                    .in_set(PrimaryCameraSystemSet),
-            );
+                    .run_if(camera::is_free_motion)
+                    .in_set(CameraMotionSystemSet::PrimaryCamera),
+            )
+            .add_systems(OnEnter(AppState::MenuScene), spawn_menu_background)
+            .add_systems(OnExit(AppState::MenuScene), despawn_menu_background);
     }
 }
