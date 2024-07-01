@@ -16,5 +16,6 @@ bevy = "0.13"
 bevy_rapier3d = "*"
 bevy_mod_picking = "*"
 bevy_editor_pls = "*"
+sickle_ui = { rev = "5a8143f", git = "https://github.com/UmbraLuminosa/sickle_ui" }
 uuid = "1.8"
 rand = "0.8.5"

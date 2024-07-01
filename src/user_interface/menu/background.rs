@@ -7,13 +7,14 @@ pub struct MenuBackground;
 
 /// Spawn the background for Menu.
 /// # Schedule
-/// `Startup`, TODO: change to on_enter(AppState::MenuScene)
+/// `OnEnter(AppState::MenuScene)`
 pub fn spawn_menu_background(
     mut commands: Commands,
     assets: Res<AssetServer>,
     q_camera: Query<Entity, With<PrimaryCamera>>,
 ) {
-    let image = assets.load("menu/background_0.png");
+    const ASPECT_RATIO: f32 = 16.0 / 9.0;
+    let image = assets.load("background/background_0.png");
     let camera = q_camera.single();
 
     commands.spawn((
@@ -25,11 +26,13 @@ pub fn spawn_menu_background(
                 ..default()
             },
             style: Style {
-                position_type: PositionType::Absolute,
-                top: Val::Percent(0.0),
-                left: Val::Percent(0.0),
-                height: Val::Percent(100.0),
-                width: Val::Percent(100.0),
+                align_self: AlignSelf::Center,
+                justify_self: JustifySelf::Center,
+                min_width: Val::Vw(100.0),
+                min_height: Val::Vh(100.0),
+                max_width: Val::Vh(ASPECT_RATIO * 100.0),
+                max_height: Val::Vw(ASPECT_RATIO.recip() * 100.0),
+                aspect_ratio: Some(ASPECT_RATIO),
                 ..default()
             },
             ..default()
@@ -37,11 +40,14 @@ pub fn spawn_menu_background(
     ));
 }
 
+/// Despawn the background for Menu.
+/// # Schedule
+/// `OnExit(AppState::MenuScene)`
 pub fn despawn_menu_background(
     mut commands: Commands,
     q_background: Query<Entity, With<MenuBackground>>,
 ) {
-    let background = q_background.single();
-
-    commands.entity(background).despawn();
+    for entity in q_background.iter() {
+        commands.entity(entity).despawn_recursive();
+    }
 }

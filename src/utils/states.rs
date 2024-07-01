@@ -7,7 +7,13 @@ pub enum AppState {
 }
 
 #[derive(States, Debug, Clone, PartialEq, Eq, Hash)]
-pub enum GameState {
-    Running,
-    Paused,
+pub enum MenuState {
+    MainMenu,
+    Invalid,
 }
+
+// #[derive(States, Debug, Clone, PartialEq, Eq, Hash)]
+// pub enum GameState {
+//     Running,
+//     Paused,
+// }
