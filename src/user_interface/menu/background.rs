@@ -6,7 +6,7 @@ use sickle_ui::prelude::*;
 #[derive(Component, Clone, Copy, Debug, Default)]
 pub struct MenuBackground;
 
-/// Spawn the background for Menu.
+/// Spawn the background for the menu.
 /// # Schedule
 /// `OnEnter(AppState::MenuScene)`
 pub fn spawn_menu_background(
@@ -27,7 +27,9 @@ pub fn spawn_menu_background(
             },
             ..default()
         })
-        .insert((TargetCamera(camera), MenuBackground))
+        .insert(TargetCamera(camera))
+        .insert(Name::new("Menu Background"))
+        .insert(MenuBackground)
         .style()
         .align_self(AlignSelf::Center)
         .justify_self(JustifySelf::Center)
@@ -35,10 +37,11 @@ pub fn spawn_menu_background(
         .max_height(Val::Vw(ASPECT_RATIO.recip() * 100.0))
         .min_width(Val::Vw(100.0))
         .max_width(Val::Vh(ASPECT_RATIO * 100.0))
-        .aspect_ratio(Some(ASPECT_RATIO));
+        .aspect_ratio(Some(ASPECT_RATIO))
+        .z_index(ZIndex::Global(-64));
 }
 
-/// Despawn the background for Menu.
+/// Despawn the background for the menu.
 /// # Schedule
 /// `OnExit(AppState::MenuScene)`
 pub fn despawn_menu_background(
@@ -46,6 +49,6 @@ pub fn despawn_menu_background(
     q_background: Query<Entity, With<MenuBackground>>,
 ) {
     for entity in q_background.iter() {
-        commands.entity(entity).despawn_recursive();
+        commands.entity(entity).despawn();
     }
 }

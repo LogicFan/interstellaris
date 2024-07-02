@@ -1,21 +1,25 @@
 use bevy::prelude::*;
-use bevy_editor_pls::prelude::*;
 use bevy_mod_picking::DefaultPickingPlugins;
 use sickle_ui::SickleUiPlugin;
-use stellaris::planetary_system::init_planetary_system;
 use stellaris::user_interface::*;
-use stellaris::utils::AppState;
+use stellaris::utils::*;
+use bevy_editor_pls::prelude::*;
 
 fn main() {
-    App::new()
-        .add_plugins(DefaultPlugins)
+    let mut app = App::new();
+
+    // third-party plugins
+    app.add_plugins(DefaultPlugins)
         .add_plugins(DefaultPickingPlugins)
-        .add_plugins(SickleUiPlugin)
-        // TODO: remove before release
-        .add_plugins(EditorPlugin::default())
-        .insert_state(AppState::MenuScene)
-        .add_plugins(UserInterfacePlugin)
-        .add_systems(Startup, init_planetary_system)
-        // .add_systems(Startup, lock_cursor)
-        .run();
+        .add_plugins(SickleUiPlugin);
+
+    // debug plugins, TODO: remove before release
+    app.add_plugins(EditorPlugin::default());
+
+    // internal plugins
+    app.insert_state(AppState::MenuScene)
+        .insert_state(MenuState::MainMenu)
+        .add_plugins(UserInterfacePlugin);
+
+    app.run();
 }
