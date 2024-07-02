@@ -3,7 +3,7 @@ use bevy_mod_picking::DefaultPickingPlugins;
 use sickle_ui::SickleUiPlugin;
 use stellaris::user_interface::*;
 use stellaris::utils::*;
-use bevy_editor_pls::prelude::*;
+// use bevy_editor_pls::prelude::*;
 
 fn main() {
     let mut app = App::new();
@@ -14,7 +14,7 @@ fn main() {
         .add_plugins(SickleUiPlugin);
 
     // debug plugins, TODO: remove before release
-    app.add_plugins(EditorPlugin::default());
+    // app.add_plugins(EditorPlugin::default());
 
     // internal plugins
     app.insert_state(AppState::MenuScene)

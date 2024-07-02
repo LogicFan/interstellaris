@@ -1,4 +1,3 @@
-use crate::utils::{AppState, MenuState};
 use bevy::prelude::*;
 
 mod camera;
@@ -16,8 +15,7 @@ pub struct UserInterfacePlugin;
 
 impl Plugin for UserInterfacePlugin {
     fn build(&self, app: &mut App) {
-        app
-            .add_plugins(menu::MenuScenePlugin)
+        app.add_plugins(menu::MenuScenePlugin)
             .insert_resource(settings::InputSettings::default())
             .insert_resource(camera::MotionMode::NoMotion)
             .add_systems(Startup, camera::spawn_primary_camera)

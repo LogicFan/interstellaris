@@ -2,9 +2,44 @@ use crate::user_interface::PrimaryCamera;
 use bevy::prelude::*;
 use sickle_ui::prelude::*;
 
+use super::MenuState;
+
 /// A marker component for all main menu items.
 #[derive(Component, Clone, Copy, Debug, Default)]
 pub struct MainMenuItem;
+
+/// helper function for creating buttons for main menu
+fn spawn_button<T>(builder: &mut UiBuilder<Entity>, text: &str, marker: T)
+where
+    T: Component,
+{
+    let text_style = TextStyle {
+        font_size: 32.0,
+        color: Color::rgb(0.9, 0.9, 0.9),
+        ..default()
+    };
+
+    builder
+        .container(ButtonBundle::default(), |children| {
+            children
+                .spawn(
+                    TextBundle::from_section(text, text_style)
+                        .with_text_justify(JustifyText::Center),
+                )
+                .insert(MainMenuItem);
+        })
+        .insert(MainMenuItem)
+        .insert(marker)
+        .style()
+        .align_content(AlignContent::Center)
+        .justify_content(JustifyContent::Center)
+        .width(Val::Px(200.0))
+        .padding(UiRect::vertical(Val::Px(4.0)))
+        .margin(UiRect::vertical(Val::Px(8.0)))
+        .border(UiRect::all(Val::Px(1.0)))
+        .border_color(Color::BLACK)
+        .background_color(Color::rgba(0.0, 0.0, 0.0, 0.5));
+}
 
 /// Spawn the main menu.
 /// # Schedule
@@ -12,44 +47,14 @@ pub struct MainMenuItem;
 pub fn spawn_main_menu(mut commands: Commands, q_camera: Query<Entity, With<PrimaryCamera>>) {
     let camera = q_camera.single();
 
-    fn new_button<T>(builder: &mut UiBuilder<Entity>, text: &str, marker: T)
-    where
-        T: Component,
-    {
-        let text_style = TextStyle {
-            font_size: 32.0,
-            color: Color::rgb(0.9, 0.9, 0.9),
-            ..default()
-        };
-
-        builder
-            .container(ButtonBundle::default(), |children| {
-                children.spawn(
-                    TextBundle::from_section(text, text_style)
-                        .with_text_justify(JustifyText::Center),
-                );
-            })
-            .insert(MainMenuItem)
-            .insert(marker)
-            .style()
-            .align_content(AlignContent::Center)
-            .justify_content(JustifyContent::Center)
-            .width(Val::Px(200.0))
-            .padding(UiRect::vertical(Val::Px(4.0)))
-            .margin(UiRect::vertical(Val::Px(8.0)))
-            .border(UiRect::all(Val::Px(1.0)))
-            .border_color(Color::BLACK)
-            .background_color(Color::rgba(0.0, 0.0, 0.0, 0.5));
-    }
-
     commands
         .ui_builder(UiRoot)
         .column(|column| {
-            new_button(column, "New Game", NewGameButton);
-            new_button(column, "Load Game", LoadGameButton);
-            new_button(column, "Settings", SettingsButton);
-            new_button(column, "Online", OnlineButton);
-            new_button(column, "Exit", ExitButton);
+            spawn_button(column, "New Game", NewGameButton);
+            spawn_button(column, "Load Game", LoadGameButton);
+            spawn_button(column, "Settings", SettingsButton);
+            spawn_button(column, "Online", OnlineButton);
+            spawn_button(column, "Exit", ExitButton);
         })
         .insert(TargetCamera(camera))
         .insert(MainMenuItem)
@@ -79,13 +84,14 @@ pub fn new_game_handler(
         (&Interaction, &mut BackgroundColor),
         (Changed<Interaction>, With<NewGameButton>),
     >,
+    mut menu_state: ResMut<NextState<MenuState>>,
 ) {
     if let Some(button) = q_button.get_single_mut().ok() {
         let (interaction, mut background_color) = button;
         match *interaction {
             Interaction::Pressed => {
                 background_color.0 = Color::rgba(0.0, 0.0, 0.0, 0.7);
-                // TODO: change MenuState
+                menu_state.set(MenuState::NewGame);
             }
             Interaction::Hovered => {
                 background_color.0 = Color::rgba(0.0, 0.0, 0.0, 0.7);
@@ -106,13 +112,14 @@ pub fn load_game_handler(
         (&Interaction, &mut BackgroundColor),
         (Changed<Interaction>, With<LoadGameButton>),
     >,
+    mut menu_state: ResMut<NextState<MenuState>>,
 ) {
     if let Some(button) = q_button.get_single_mut().ok() {
         let (interaction, mut background_color) = button;
         match *interaction {
             Interaction::Pressed => {
                 background_color.0 = Color::rgba(0.0, 0.0, 0.0, 0.7);
-                // TODO: change MenuState
+                menu_state.set(MenuState::LoadGame);
             }
             Interaction::Hovered => {
                 background_color.0 = Color::rgba(0.0, 0.0, 0.0, 0.7);
@@ -133,13 +140,14 @@ pub fn settings_handler(
         (&Interaction, &mut BackgroundColor),
         (Changed<Interaction>, With<SettingsButton>),
     >,
+    mut menu_state: ResMut<NextState<MenuState>>,
 ) {
     if let Some(button) = q_button.get_single_mut().ok() {
         let (interaction, mut background_color) = button;
         match *interaction {
             Interaction::Pressed => {
                 background_color.0 = Color::rgba(0.0, 0.0, 0.0, 0.7);
-                // TODO: change MenuState
+                menu_state.set(MenuState::Settings);
             }
             Interaction::Hovered => {
                 background_color.0 = Color::rgba(0.0, 0.0, 0.0, 0.7);
@@ -160,13 +168,14 @@ pub fn online_handler(
         (&Interaction, &mut BackgroundColor),
         (Changed<Interaction>, With<OnlineButton>),
     >,
+    mut menu_state: ResMut<NextState<MenuState>>,
 ) {
     if let Some(button) = q_button.get_single_mut().ok() {
         let (interaction, mut background_color) = button;
         match *interaction {
             Interaction::Pressed => {
                 background_color.0 = Color::rgba(0.0, 0.0, 0.0, 0.7);
-                // TODO: change MenuState
+                menu_state.set(MenuState::Online);
             }
             Interaction::Hovered => {
                 background_color.0 = Color::rgba(0.0, 0.0, 0.0, 0.7);
