@@ -18,6 +18,7 @@ pub fn spawn_main_menu(mut commands: Commands, q_camera: Query<Entity, With<Prim
     {
         let text_style = TextStyle {
             font_size: 32.0,
+            color: Color::rgb(0.9, 0.9, 0.9),
             ..default()
         };
 
@@ -73,18 +74,133 @@ pub fn despawn_main_menu(mut commands: Commands, q_background: Query<Entity, Wit
 #[derive(Component, Clone, Copy, Debug, Default)]
 pub struct NewGameButton;
 
+pub fn new_game_handler(
+    mut q_button: Query<
+        (&Interaction, &mut BackgroundColor),
+        (Changed<Interaction>, With<NewGameButton>),
+    >,
+) {
+    if let Some(button) = q_button.get_single_mut().ok() {
+        let (interaction, mut background_color) = button;
+        match *interaction {
+            Interaction::Pressed => {
+                background_color.0 = Color::rgba(0.0, 0.0, 0.0, 0.7);
+                // TODO: change MenuState
+            }
+            Interaction::Hovered => {
+                background_color.0 = Color::rgba(0.0, 0.0, 0.0, 0.7);
+            }
+            Interaction::None => {
+                background_color.0 = Color::rgba(0.0, 0.0, 0.0, 0.5);
+            }
+        }
+    }
+}
+
 /// A marker component for all main menu items.
 #[derive(Component, Clone, Copy, Debug, Default)]
 pub struct LoadGameButton;
+
+pub fn load_game_handler(
+    mut q_button: Query<
+        (&Interaction, &mut BackgroundColor),
+        (Changed<Interaction>, With<LoadGameButton>),
+    >,
+) {
+    if let Some(button) = q_button.get_single_mut().ok() {
+        let (interaction, mut background_color) = button;
+        match *interaction {
+            Interaction::Pressed => {
+                background_color.0 = Color::rgba(0.0, 0.0, 0.0, 0.7);
+                // TODO: change MenuState
+            }
+            Interaction::Hovered => {
+                background_color.0 = Color::rgba(0.0, 0.0, 0.0, 0.7);
+            }
+            Interaction::None => {
+                background_color.0 = Color::rgba(0.0, 0.0, 0.0, 0.5);
+            }
+        }
+    }
+}
 
 /// A marker component for all main menu items.
 #[derive(Component, Clone, Copy, Debug, Default)]
 pub struct SettingsButton;
 
+pub fn settings_handler(
+    mut q_button: Query<
+        (&Interaction, &mut BackgroundColor),
+        (Changed<Interaction>, With<SettingsButton>),
+    >,
+) {
+    if let Some(button) = q_button.get_single_mut().ok() {
+        let (interaction, mut background_color) = button;
+        match *interaction {
+            Interaction::Pressed => {
+                background_color.0 = Color::rgba(0.0, 0.0, 0.0, 0.7);
+                // TODO: change MenuState
+            }
+            Interaction::Hovered => {
+                background_color.0 = Color::rgba(0.0, 0.0, 0.0, 0.7);
+            }
+            Interaction::None => {
+                background_color.0 = Color::rgba(0.0, 0.0, 0.0, 0.5);
+            }
+        }
+    }
+}
+
 /// A marker component for all main menu items.
 #[derive(Component, Clone, Copy, Debug, Default)]
 pub struct OnlineButton;
 
+pub fn online_handler(
+    mut q_button: Query<
+        (&Interaction, &mut BackgroundColor),
+        (Changed<Interaction>, With<OnlineButton>),
+    >,
+) {
+    if let Some(button) = q_button.get_single_mut().ok() {
+        let (interaction, mut background_color) = button;
+        match *interaction {
+            Interaction::Pressed => {
+                background_color.0 = Color::rgba(0.0, 0.0, 0.0, 0.7);
+                // TODO: change MenuState
+            }
+            Interaction::Hovered => {
+                background_color.0 = Color::rgba(0.0, 0.0, 0.0, 0.7);
+            }
+            Interaction::None => {
+                background_color.0 = Color::rgba(0.0, 0.0, 0.0, 0.5);
+            }
+        }
+    }
+}
+
 /// A marker component for all main menu items.
 #[derive(Component, Clone, Copy, Debug, Default)]
 pub struct ExitButton;
+
+pub fn exit_handler(
+    mut q_button: Query<
+        (&Interaction, &mut BackgroundColor),
+        (Changed<Interaction>, With<ExitButton>),
+    >,
+) {
+    if let Some(button) = q_button.get_single_mut().ok() {
+        let (interaction, mut background_color) = button;
+        match *interaction {
+            Interaction::Pressed => {
+                background_color.0 = Color::rgba(0.0, 0.0, 0.0, 0.7);
+                std::process::exit(0);
+            }
+            Interaction::Hovered => {
+                background_color.0 = Color::rgba(0.0, 0.0, 0.0, 0.7);
+            }
+            Interaction::None => {
+                background_color.0 = Color::rgba(0.0, 0.0, 0.0, 0.5);
+            }
+        }
+    }
+}
