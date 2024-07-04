@@ -11,10 +11,10 @@ pub enum AppState {
 pub enum MenuState {
     // if `AppState` == `MenuScene`
     MainMenu,
-    NewGame,
-    LoadGame,
-    Settings,
-    Online,
+    NewGameMenu,
+    LoadGameMenu,
+    SettingsMenu,
+    OnlineMenu,
     // if `AppState` == `GameScene`
     InGame,
     Paused,

@@ -1,5 +1,5 @@
-use crate::utils::*;
 use crate::planetary_system::api::Coordinate;
+use crate::utils::*;
 use bevy::prelude::*;
 
 #[derive(Debug, Clone, Copy, Component)]
@@ -30,5 +30,3 @@ pub struct VFleet {
     pub inherited_visibility: InheritedVisibility,
     pub view_visibility: ViewVisibility,
 }
-
-

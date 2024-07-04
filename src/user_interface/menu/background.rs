@@ -48,7 +48,6 @@ pub fn despawn_menu_background(
     mut commands: Commands,
     q_background: Query<Entity, With<MenuBackground>>,
 ) {
-    for entity in q_background.iter() {
-        commands.entity(entity).despawn();
-    }
+    let background = q_background.single();
+    commands.entity(background).despawn_recursive();
 }

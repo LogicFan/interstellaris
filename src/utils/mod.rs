@@ -4,6 +4,6 @@ mod states;
 
 pub use object_id::ObjectId;
 pub use object_id::ObjectRef;
-pub use states::{AppState, MenuState};
 pub use one_shot_system::OneShotSystem;
 pub use one_shot_system::OneShotSystemMap;
+pub use states::{AppState, MenuState};

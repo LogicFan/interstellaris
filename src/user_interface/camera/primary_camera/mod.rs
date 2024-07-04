@@ -40,7 +40,6 @@ pub use crate::user_interface::settings::InputSettings;
 
 pub use free_motion::*;
 
-
 /// The marker component of primary camera.
 #[derive(Component, Clone, Copy, Debug, Default)]
 pub struct PrimaryCamera;
@@ -62,10 +61,10 @@ pub enum MotionMode {
         max_r: f32,
     },
     Transition {
-        a:      Vec3,
-        b:      Vec3,
-        c:      Vec3,
-        d:      Vec3,
+        a: Vec3,
+        b: Vec3,
+        c: Vec3,
+        d: Vec3,
         target: Vec3,
     },
 }

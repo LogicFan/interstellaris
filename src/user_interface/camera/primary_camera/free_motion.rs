@@ -1,8 +1,8 @@
 //! Systems to control the free motion
-use super::InputSettings;
-use super::PrimaryCamera;
-use super::MotionMode;
 use super::CameraOrigin;
+use super::InputSettings;
+use super::MotionMode;
+use super::PrimaryCamera;
 use bevy::input::mouse::{MouseMotion, MouseWheel};
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
@@ -127,7 +127,7 @@ pub fn rotate_main_camera(
         transform.rotate_z(delta.x);
 
         // rotate vertically, apply constraint
-        // TODO: optimize computation here, we can skip first and third 
+        // TODO: optimize computation here, we can skip first and third
         // angle computation
         let (_, θ, _) = transform.rotation.to_euler(EulerRot::ZXY);
         delta.y = delta.y.clamp(-θ, max_θ - θ);

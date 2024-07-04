@@ -1,10 +1,9 @@
-use bevy::prelude::*;
-
 mod camera;
 mod cursor;
 mod menu;
 mod settings;
 
+use bevy::prelude::*;
 pub use camera::spawn_primary_camera;
 pub use camera::CameraMotionSystemSet;
 pub use camera::PrimaryCamera;

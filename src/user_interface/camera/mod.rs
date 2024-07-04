@@ -6,5 +6,5 @@ pub use primary_camera::*;
 
 #[derive(SystemSet, Debug, Clone, PartialEq, Eq, Hash)]
 pub enum CameraMotionSystemSet {
-    PrimaryCamera
+    PrimaryCamera,
 }
