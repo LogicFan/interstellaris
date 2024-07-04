@@ -3,6 +3,7 @@ mod new_game_menu;
 mod online_menu;
 mod settings_menu;
 
+use super::MenuState;
 pub use super::UiCamera;
 pub use super::UiSettings;
 pub use load_game_menu::*;
@@ -53,10 +54,11 @@ impl UiSecondaryMenuExt for UiBuilder<'_, UiRoot> {
 
                     row.container(ButtonBundle::default(), |parent| {
                         parent.spawn(
-                            TextBundle::from_section("BACK", text_style.clone())
+                            TextBundle::from_section("Return", text_style.clone())
                                 .with_text_justify(JustifyText::Center),
                         );
                     })
+                    .insert(SubMenuButton::Return)
                     .style()
                     .align_content(AlignContent::Center)
                     .justify_content(JustifyContent::Center)
@@ -72,6 +74,7 @@ impl UiSecondaryMenuExt for UiBuilder<'_, UiRoot> {
                                 .with_text_justify(JustifyText::Center),
                         );
                     })
+                    .insert(SubMenuButton::Confirm)
                     .style()
                     .align_content(AlignContent::Center)
                     .justify_content(JustifyContent::Center)
@@ -98,11 +101,35 @@ impl UiSecondaryMenuExt for UiBuilder<'_, UiRoot> {
 }
 
 /// A marker component for all main menu items.
-#[derive(Component, Clone, Copy, Debug)]
-pub enum SecondaryMenuButton {
-    NewGame,
-    LoadGame,
-    Settings,
-    Online,
-    Exit,
+#[derive(Component, Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
+pub enum SubMenuButton {
+    Return,
+    Confirm
+}
+
+
+pub fn sub_menu_button_handler(
+    mut q_button: Query<
+        (&mut BackgroundColor, &Interaction, &SubMenuButton),
+        Changed<Interaction>,
+    >,
+    mut menu_state: ResMut<NextState<MenuState>>,
+    ui_settings: Res<UiSettings>,
+) {
+    for (mut background_color, interaction, button) in q_button.iter_mut() {
+        match *interaction {
+            Interaction::Pressed => {
+                background_color.0 = ui_settings.background_color_2;
+                if *button == SubMenuButton::Return {
+                    menu_state.set(MenuState::MainMenu);
+                }
+            }
+            Interaction::Hovered => {
+                background_color.0 = ui_settings.background_color_2;
+            }
+            Interaction::None => {
+                background_color.0 = ui_settings.background_color_1;
+            }
+        }
+    }
 }

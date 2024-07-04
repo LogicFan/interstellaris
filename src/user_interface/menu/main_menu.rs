@@ -49,7 +49,7 @@ pub fn spawn_main_menu(
 }
 
 /// A marker component for all main menu items.
-#[derive(Component, Clone, Copy, Debug)]
+#[derive(Component, Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub enum MainMenuButton {
     NewGame,
     LoadGame,
@@ -70,7 +70,7 @@ impl MainMenuButton {
     }
 }
 
-pub fn primary_menu_button_handler(
+pub fn main_menu_button_handler(
     mut q_button: Query<
         (&mut BackgroundColor, &Interaction, &MainMenuButton),
         Changed<Interaction>,
