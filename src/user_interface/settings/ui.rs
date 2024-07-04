@@ -5,6 +5,7 @@ pub struct UiSettings {
     /// 1.0 is the normal size
     pub ui_scale: f32,
     
+    #[allow(unused)]
     pub font: Handle<Font>,
     pub text_color: Color,
 

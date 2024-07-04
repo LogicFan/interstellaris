@@ -22,19 +22,19 @@ pub fn spawn_main_menu(
         .ui_builder(UiRoot)
         .column(|column| {
             column
-                .text_button("New Game", &ui_settings)
+                .text_button(&ui_settings, "New Game")
                 .insert(MainMenuButton::NewGame);
             column
-                .text_button("Load Game", &ui_settings)
+                .text_button(&ui_settings, "Load Game")
                 .insert(MainMenuButton::LoadGame);
             column
-                .text_button("Online", &ui_settings)
+                .text_button(&ui_settings, "Online")
                 .insert(MainMenuButton::Online);
             column
-                .text_button("Settings", &ui_settings)
+                .text_button(&ui_settings, "Settings")
                 .insert(MainMenuButton::Settings);
             column
-                .text_button("Exit", &ui_settings)
+                .text_button(&ui_settings, "Exit")
                 .insert(MainMenuButton::Exit);
         })
         .insert(TargetCamera(camera))
@@ -95,15 +95,15 @@ pub fn primary_menu_button_handler(
 }
 
 trait UiTextButtonExt {
-    fn text_button(&mut self, text: &str, settings: &UiSettings) -> UiBuilder<'_, Entity>;
+    fn text_button(&mut self, settings: &UiSettings, text: &str) -> UiBuilder<'_, Entity>;
 }
 
 impl UiTextButtonExt for UiBuilder<'_, Entity> {
-    fn text_button<'b>(&mut self, text: &str, settings: &UiSettings) -> UiBuilder<'_, Entity> {
+    fn text_button<'b>(&mut self, settings: &UiSettings, text: &str) -> UiBuilder<'_, Entity> {
         let text_style = TextStyle {
+            font: settings.font.clone(),
             font_size: 32.0 * settings.ui_scale,
             color: settings.text_color,
-            ..default()
         };
 
         let mut builder = self.container(ButtonBundle::default(), |parent| {
