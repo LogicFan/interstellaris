@@ -2,6 +2,9 @@ mod background;
 mod primary_menu;
 mod secondary_menu;
 
+pub use crate::user_interface::camera::PrimaryCamera as UiCamera;
+pub use crate::user_interface::settings::UiSettings;
+
 use crate::utils::*;
 use background::*;
 use bevy::prelude::*;

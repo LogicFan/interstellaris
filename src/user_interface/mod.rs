@@ -14,8 +14,8 @@ pub struct UserInterfacePlugin;
 
 impl Plugin for UserInterfacePlugin {
     fn build(&self, app: &mut App) {
-        app.add_plugins(menu::MenuScenePlugin)
-            .insert_resource(settings::InputSettings::default())
+        app.add_plugins(settings::SettingsPlugin)
+            .add_plugins(menu::MenuScenePlugin)
             .insert_resource(camera::MotionMode::NoMotion)
             .add_systems(Startup, camera::spawn_primary_camera)
             .add_systems(

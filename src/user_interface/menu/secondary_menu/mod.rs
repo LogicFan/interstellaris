@@ -3,11 +3,12 @@ mod new_game_menu;
 mod online_menu;
 mod settings_menu;
 
-use bevy::prelude::*;
 pub use load_game_menu::*;
 pub use new_game_menu::*;
 pub use online_menu::*;
 pub use settings_menu::*;
+
+use bevy::prelude::*;
 use sickle_ui::prelude::*;
 
 const TEXT_COLOR: Color = Color::rgb(0.8, 0.8, 0.8);
