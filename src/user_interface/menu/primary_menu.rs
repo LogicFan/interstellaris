@@ -26,10 +26,10 @@ pub fn spawn_main_menu(mut commands: Commands, q_camera: Query<Entity, With<Prim
             column
                 .text_button("Load Game")
                 .insert(MainMenuButton::LoadGame);
+            column.text_button("Online").insert(MainMenuButton::Online);
             column
                 .text_button("Settings")
                 .insert(MainMenuButton::Settings);
-            column.text_button("Online").insert(MainMenuButton::Online);
             column.text_button("Exit").insert(MainMenuButton::Exit);
         })
         .insert(TargetCamera(camera))

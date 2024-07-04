@@ -4,8 +4,11 @@ mod online_menu;
 mod settings_menu;
 
 use bevy::prelude::*;
+pub use load_game_menu::*;
+pub use new_game_menu::*;
+pub use online_menu::*;
+pub use settings_menu::*;
 use sickle_ui::prelude::*;
-pub use new_game_menu::spawn_new_game_menu;
 
 const TEXT_COLOR: Color = Color::rgb(0.8, 0.8, 0.8);
 const BUTTON_NONE_COLOR: Color = Color::rgba(0.0, 0.0, 0.0, 0.8);

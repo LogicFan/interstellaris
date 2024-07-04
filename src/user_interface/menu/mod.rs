@@ -6,7 +6,7 @@ use crate::utils::*;
 use background::*;
 use bevy::prelude::*;
 use primary_menu::*;
-use secondary_menu::spawn_new_game_menu;
+use secondary_menu::*;
 // use new_game_menu::*;
 
 pub struct MenuScenePlugin;
@@ -31,7 +31,29 @@ impl Plugin for MenuScenePlugin {
                 primary_menu_button_handler.run_if(in_state(MenuState::PrimaryMenu)),
             )
             // new game menu
-            .add_systems(OnEnter(MenuState::NewGameMenu), spawn_new_game_menu);
+            .add_systems(OnEnter(MenuState::NewGameMenu), spawn_new_game_menu)
+            .add_systems(
+                OnExit(MenuState::NewGameMenu),
+                despawn_entities::<NewGameMenu>,
+            )
+            // load game menu
+            .add_systems(OnEnter(MenuState::LoadGameMenu), spawn_load_game_menu)
+            .add_systems(
+                OnExit(MenuState::LoadGameMenu),
+                despawn_entities::<LoadGameMenu>,
+            )
+            // online menu
+            .add_systems(OnEnter(MenuState::OnlineMenu), spawn_online_menu)
+            .add_systems(
+                OnExit(MenuState::OnlineMenu),
+                despawn_entities::<OnlineMenu>,
+            )
+            // settings menu
+            .add_systems(OnEnter(MenuState::SettingsMenu), spawn_settings_menu)
+            .add_systems(
+                OnExit(MenuState::SettingsMenu),
+                despawn_entities::<LoadGameMenu>,
+            );
     }
 }
 

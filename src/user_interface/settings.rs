@@ -16,3 +16,15 @@ impl Default for InputSettings {
         }
     }
 }
+
+#[derive(Debug, Clone, Copy, Resource)]
+pub struct VideoSettings {
+    pub mouse_motion_sensitivity: f32,
+    pub mouse_scroll_sensitivity: f32,
+}
+
+#[derive(Debug, Clone, Copy, Resource)]
+pub struct AudioSettings {
+    pub mouse_motion_sensitivity: f32,
+    pub mouse_scroll_sensitivity: f32,
+}
