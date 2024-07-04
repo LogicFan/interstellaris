@@ -6,7 +6,7 @@ use sickle_ui::prelude::*;
 
 /// A marker component for all main menu items.
 #[derive(Component, Clone, Copy, Debug, Default)]
-pub struct PrimaryMenu;
+pub struct MainMenu;
 
 /// Spawn the main menu.
 /// # Schedule
@@ -38,7 +38,7 @@ pub fn spawn_main_menu(
                 .insert(MainMenuButton::Exit);
         })
         .insert(TargetCamera(camera))
-        .insert(PrimaryMenu)
+        .insert(MainMenu)
         .insert(Name::new("Main Menu"))
         .style()
         .row_gap(Val::Px(16.0))

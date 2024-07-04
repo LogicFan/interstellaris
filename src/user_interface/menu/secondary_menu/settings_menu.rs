@@ -32,5 +32,5 @@ pub fn spawn_settings_menu(
         })
         .insert(TargetCamera(camera))
         .insert(SettingsMenu)
-        .insert(Name::new("New Game Menu"));
+        .insert(Name::new("Settings Menu"));
 }

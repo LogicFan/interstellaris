@@ -32,5 +32,5 @@ pub fn spawn_online_menu(
         })
         .insert(TargetCamera(camera))
         .insert(OnlineMenu)
-        .insert(Name::new("New Game Menu"));
+        .insert(Name::new("Online Menu"));
 }

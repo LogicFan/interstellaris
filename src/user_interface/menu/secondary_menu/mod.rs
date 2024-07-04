@@ -96,3 +96,13 @@ impl UiSecondaryMenuExt for UiBuilder<'_, UiRoot> {
         builder
     }
 }
+
+/// A marker component for all main menu items.
+#[derive(Component, Clone, Copy, Debug)]
+pub enum SecondaryMenuButton {
+    NewGame,
+    LoadGame,
+    Settings,
+    Online,
+    Exit,
+}

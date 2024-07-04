@@ -1,5 +1,5 @@
 mod background;
-mod primary_menu;
+mod main_menu;
 mod secondary_menu;
 
 pub use crate::user_interface::camera::PrimaryCamera as UiCamera;
@@ -8,7 +8,7 @@ pub use crate::user_interface::settings::UiSettings;
 use crate::utils::*;
 use background::*;
 use bevy::prelude::*;
-use primary_menu::*;
+use main_menu::*;
 use secondary_menu::*;
 // use new_game_menu::*;
 
@@ -24,14 +24,14 @@ impl Plugin for MenuScenePlugin {
                 despawn_entities::<MenuBackground>,
             )
             // main menu
-            .add_systems(OnEnter(MenuState::PrimaryMenu), spawn_main_menu)
+            .add_systems(OnEnter(MenuState::MainMenu), spawn_main_menu)
             .add_systems(
-                OnExit(MenuState::PrimaryMenu),
-                despawn_entities::<PrimaryMenu>,
+                OnExit(MenuState::MainMenu),
+                despawn_entities::<MainMenu>,
             )
             .add_systems(
                 Update,
-                primary_menu_button_handler.run_if(in_state(MenuState::PrimaryMenu)),
+                primary_menu_button_handler.run_if(in_state(MenuState::MainMenu)),
             )
             // new game menu
             .add_systems(OnEnter(MenuState::NewGameMenu), spawn_new_game_menu)
