@@ -18,7 +18,7 @@ fn main() {
 
     // internal plugins
     app.insert_state(AppState::MenuScene)
-        .insert_state(MenuState::MainMenu)
+        .insert_state(MenuState::PrimaryMenu)
         .add_plugins(UserInterfacePlugin);
 
     app.run();

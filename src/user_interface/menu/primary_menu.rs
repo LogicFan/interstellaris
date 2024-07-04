@@ -20,26 +20,17 @@ pub fn spawn_main_menu(mut commands: Commands, q_camera: Query<Entity, With<Prim
     commands
         .ui_builder(UiRoot)
         .column(|column| {
-            let text_style = TextStyle {
-                font_size: 32.0,
-                color: TEXT_COLOR,
-                ..default()
-            };
             column
-                .text_button("New Game", text_style.clone())
+                .text_button("New Game")
                 .insert(MainMenuButton::NewGame);
             column
-                .text_button("Load Game", text_style.clone())
+                .text_button("Load Game")
                 .insert(MainMenuButton::LoadGame);
             column
-                .text_button("Settings", text_style.clone())
+                .text_button("Settings")
                 .insert(MainMenuButton::Settings);
-            column
-                .text_button("Online", text_style.clone())
-                .insert(MainMenuButton::Online);
-            column
-                .text_button("Exit", text_style.clone())
-                .insert(MainMenuButton::Exit);
+            column.text_button("Online").insert(MainMenuButton::Online);
+            column.text_button("Exit").insert(MainMenuButton::Exit);
         })
         .insert(TargetCamera(camera))
         .insert(PrimaryMenu)
@@ -50,14 +41,6 @@ pub fn spawn_main_menu(mut commands: Commands, q_camera: Query<Entity, With<Prim
         .justify_self(JustifySelf::Center)
         .align_content(AlignContent::Center)
         .justify_content(JustifyContent::Center);
-}
-
-/// Despawn the main menu.
-/// # Schedule
-/// `OnExit(MenuState::MainMenu)`
-pub fn despawn_main_menu(mut commands: Commands, q_main_menu: Query<Entity, With<PrimaryMenu>>) {
-    let main_menu = q_main_menu.single();
-    commands.entity(main_menu).despawn_recursive();
 }
 
 /// A marker component for all main menu items.
@@ -106,11 +89,17 @@ pub fn primary_menu_button_handler(
 }
 
 trait UiTextButtonExt {
-    fn text_button(&mut self, text: &str, text_style: TextStyle) -> UiBuilder<'_, Entity>;
+    fn text_button(&mut self, text: &str) -> UiBuilder<'_, Entity>;
 }
 
 impl UiTextButtonExt for UiBuilder<'_, Entity> {
-    fn text_button<'b>(&mut self, text: &str, text_style: TextStyle) -> UiBuilder<'_, Entity> {
+    fn text_button<'b>(&mut self, text: &str) -> UiBuilder<'_, Entity> {
+        let text_style = TextStyle {
+            font_size: 32.0,
+            color: TEXT_COLOR,
+            ..default()
+        };
+
         let mut builder = self.container(ButtonBundle::default(), |parent| {
             parent.spawn(
                 TextBundle::from_section(text, text_style).with_text_justify(JustifyText::Center),
@@ -124,7 +113,7 @@ impl UiTextButtonExt for UiBuilder<'_, Entity> {
             .width(Val::Px(200.0))
             .padding(UiRect::vertical(Val::Px(4.0)))
             .border(UiRect::all(Val::Px(1.0)))
-            .border_color(Color::BLACK)
+            .border_color(Color::WHITE)
             .background_color(BUTTON_NONE_COLOR);
 
         builder

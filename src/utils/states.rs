@@ -10,7 +10,7 @@ pub enum AppState {
 #[derive(States, Debug, Clone, PartialEq, Eq, Hash)]
 pub enum MenuState {
     // if `AppState` == `MenuScene`
-    MainMenu,
+    PrimaryMenu,
     NewGameMenu,
     LoadGameMenu,
     SettingsMenu,

@@ -40,14 +40,3 @@ pub fn spawn_menu_background(
         .aspect_ratio(Some(ASPECT_RATIO))
         .z_index(ZIndex::Global(-64));
 }
-
-/// Despawn the background for the menu.
-/// # Schedule
-/// `OnExit(AppState::MenuScene)`
-pub fn despawn_menu_background(
-    mut commands: Commands,
-    q_background: Query<Entity, With<MenuBackground>>,
-) {
-    let background = q_background.single();
-    commands.entity(background).despawn_recursive();
-}
