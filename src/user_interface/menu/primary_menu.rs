@@ -11,33 +11,6 @@ const BUTTON_FOCUS_COLOR: Color = Color::rgba(0.0, 0.0, 0.0, 0.6);
 #[derive(Component, Clone, Copy, Debug, Default)]
 pub struct PrimaryMenu;
 
-/// helper function for creating buttons for main menu
-fn spawn_button(builder: &mut UiBuilder<Entity>, text: &str, button: MainMenuButton) {
-    let text_style = TextStyle {
-        font_size: 32.0,
-        color: TEXT_COLOR,
-        ..default()
-    };
-
-    builder
-        .container(ButtonBundle::default(), |parent| {
-            parent.spawn(
-                TextBundle::from_section(text, text_style).with_text_justify(JustifyText::Center),
-            );
-        })
-        .insert(button)
-        .style()
-        .align_content(AlignContent::Center)
-        .justify_content(JustifyContent::Center)
-        .width(Val::Px(200.0))
-        .padding(UiRect::vertical(Val::Px(4.0)))
-        .margin(UiRect::vertical(Val::Px(8.0)))
-        .border(UiRect::all(Val::Px(1.0)))
-        .border_color(Color::BLACK)
-        .background_color(BUTTON_NONE_COLOR)
-        .entity_commands();
-}
-
 /// Spawn the main menu.
 /// # Schedule
 /// `OnEnter(MenuState::MainMenu)`
@@ -47,16 +20,32 @@ pub fn spawn_main_menu(mut commands: Commands, q_camera: Query<Entity, With<Prim
     commands
         .ui_builder(UiRoot)
         .column(|column| {
-            spawn_button(column, "New Game", MainMenuButton::NewGame);
-            spawn_button(column, "Load Game", MainMenuButton::LoadGame);
-            spawn_button(column, "Settings", MainMenuButton::Settings);
-            spawn_button(column, "Online", MainMenuButton::Online);
-            spawn_button(column, "Exit", MainMenuButton::Exit);
+            let text_style = TextStyle {
+                font_size: 32.0,
+                color: TEXT_COLOR,
+                ..default()
+            };
+            column
+                .text_button("New Game", text_style.clone())
+                .insert(MainMenuButton::NewGame);
+            column
+                .text_button("Load Game", text_style.clone())
+                .insert(MainMenuButton::LoadGame);
+            column
+                .text_button("Settings", text_style.clone())
+                .insert(MainMenuButton::Settings);
+            column
+                .text_button("Online", text_style.clone())
+                .insert(MainMenuButton::Online);
+            column
+                .text_button("Exit", text_style.clone())
+                .insert(MainMenuButton::Exit);
         })
         .insert(TargetCamera(camera))
         .insert(PrimaryMenu)
         .insert(Name::new("Main Menu"))
         .style()
+        .row_gap(Val::Px(16.0))
         .align_self(AlignSelf::Center)
         .justify_self(JustifySelf::Center)
         .align_content(AlignContent::Center)
@@ -113,5 +102,31 @@ pub fn primary_menu_button_handler(
                 background_color.0 = BUTTON_NONE_COLOR;
             }
         }
+    }
+}
+
+trait UiTextButtonExt {
+    fn text_button(&mut self, text: &str, text_style: TextStyle) -> UiBuilder<'_, Entity>;
+}
+
+impl UiTextButtonExt for UiBuilder<'_, Entity> {
+    fn text_button<'b>(&mut self, text: &str, text_style: TextStyle) -> UiBuilder<'_, Entity> {
+        let mut builder = self.container(ButtonBundle::default(), |parent| {
+            parent.spawn(
+                TextBundle::from_section(text, text_style).with_text_justify(JustifyText::Center),
+            );
+        });
+
+        builder
+            .style()
+            .align_content(AlignContent::Center)
+            .justify_content(JustifyContent::Center)
+            .width(Val::Px(200.0))
+            .padding(UiRect::vertical(Val::Px(4.0)))
+            .border(UiRect::all(Val::Px(1.0)))
+            .border_color(Color::BLACK)
+            .background_color(BUTTON_NONE_COLOR);
+
+        builder
     }
 }
