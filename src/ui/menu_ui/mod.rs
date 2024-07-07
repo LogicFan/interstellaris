@@ -22,7 +22,7 @@ pub enum MenuState {
     MainMenu,
     NewGame,
     LoadGame,
-    SettingsMenu,
+    Settings,
     OnlineGame,
 }
 
@@ -39,10 +39,6 @@ impl Plugin for MenuScenePlugin {
             )
             // main menu
             .add_systems(OnEnter(MenuState::MainMenu), spawn_main_menu)
-            .add_systems(
-                Update,
-                main_menu_button_handler.run_if(in_state(MenuState::MainMenu)),
-            )
             // all sub menus
             .add_systems(
                 Update,
@@ -50,7 +46,7 @@ impl Plugin for MenuScenePlugin {
                     in_state(MenuState::NewGame)
                         .or_else(in_state(MenuState::LoadGame))
                         .or_else(in_state(MenuState::OnlineGame))
-                        .or_else(in_state(MenuState::SettingsMenu)),
+                        .or_else(in_state(MenuState::Settings)),
                 ),
             )
             // new game menu
@@ -70,9 +66,6 @@ impl Plugin for MenuScenePlugin {
                 online_game::spawn_online_menu,
             )
             // settings menu
-            .add_systems(
-                OnEnter(MenuState::SettingsMenu),
-                settings::spawn_settings_menu,
-            );
+            .add_systems(OnEnter(MenuState::Settings), settings::spawn_settings_menu);
     }
 }

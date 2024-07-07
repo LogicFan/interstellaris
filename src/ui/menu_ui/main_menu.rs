@@ -3,11 +3,8 @@ use super::MenuState;
 use super::UiCamera;
 use super::UiSettings;
 use bevy::prelude::*;
+use bevy_mod_picking::prelude::*;
 use sickle_ui::prelude::{generated::*, UiBuilderExt, UiColumnExt, UiRoot};
-
-/// A marker component for all main menu items.
-#[derive(Component, Clone, Copy, Debug, Default)]
-pub struct MainMenu;
 
 /// Spawn the main menu.
 /// # Schedule
@@ -24,22 +21,31 @@ pub fn spawn_main_menu(
         .column(|column| {
             column
                 .large_text_button(&ui_settings, "New Game")
-                .insert(MainMenuButton::NewGame);
+                .insert(On::<Pointer<Click>>::run(
+                    |mut state: ResMut<NextState<MenuState>>| state.set(MenuState::NewGame),
+                ));
             column
                 .large_text_button(&ui_settings, "Load Game")
-                .insert(MainMenuButton::LoadGame);
+                .insert(On::<Pointer<Click>>::run(
+                    |mut state: ResMut<NextState<MenuState>>| state.set(MenuState::LoadGame),
+                ));
             column
-                .large_text_button(&ui_settings, "Online")
-                .insert(MainMenuButton::Online);
+                .large_text_button(&ui_settings, "Online Game")
+                .insert(On::<Pointer<Click>>::run(
+                    |mut state: ResMut<NextState<MenuState>>| state.set(MenuState::OnlineGame),
+                ));
             column
                 .large_text_button(&ui_settings, "Settings")
-                .insert(MainMenuButton::Settings);
+                .insert(On::<Pointer<Click>>::run(
+                    |mut state: ResMut<NextState<MenuState>>| state.set(MenuState::Settings),
+                ));
             column
                 .large_text_button(&ui_settings, "Exit")
-                .insert(MainMenuButton::Exit);
+                .insert(On::<Pointer<Click>>::run(|mut e: EventWriter<AppExit>| {
+                    e.send(AppExit::Success);
+                }));
         })
         .insert(TargetCamera(camera))
-        .insert(MainMenu)
         .insert(Name::new("Main Menu"))
         .insert(StateScoped(MenuState::MainMenu))
         .style()
@@ -48,44 +54,4 @@ pub fn spawn_main_menu(
         .justify_self(JustifySelf::Center)
         .align_content(AlignContent::Center)
         .justify_content(JustifyContent::Center);
-}
-
-/// A marker component for all main menu items.
-#[derive(Component, Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
-pub enum MainMenuButton {
-    NewGame,
-    LoadGame,
-    Settings,
-    Online,
-    Exit,
-}
-
-impl MainMenuButton {
-    fn menu_state(&self) -> MenuState {
-        match self {
-            MainMenuButton::NewGame => MenuState::NewGame,
-            MainMenuButton::LoadGame => MenuState::LoadGame,
-            MainMenuButton::Settings => MenuState::SettingsMenu,
-            MainMenuButton::Online => MenuState::OnlineGame,
-            MainMenuButton::Exit => std::process::exit(0),
-        }
-    }
-}
-
-pub fn main_menu_button_handler(
-    mut q_button: Query<
-        (&mut BackgroundColor, &Interaction, &MainMenuButton),
-        Changed<Interaction>,
-    >,
-    mut menu_state: ResMut<NextState<MenuState>>,
-    ui_settings: Res<UiSettings>,
-) {
-    for (mut background_color, interaction, button) in q_button.iter_mut() {
-        match *interaction {
-            Interaction::Pressed => {
-                menu_state.set(button.menu_state());
-            }
-            _ => (),
-        }
-    }
 }
