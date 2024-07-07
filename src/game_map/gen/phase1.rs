@@ -15,7 +15,7 @@ pub fn init_galaxy(
 
     let mesh = asset.add(Cuboid::new(0.5, 0.5, 0.5).into());
     let material = asset.add(StandardMaterial {
-        emissive: Color::rgb_linear(1000.0, 1000.0, 1000.0),
+        emissive: LinearRgba::new(1000.0, 1000.0, 1000.0, 1.0),
         ..default()
     });
 

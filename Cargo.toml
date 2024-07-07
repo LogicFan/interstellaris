@@ -13,10 +13,10 @@ opt-level = 3
 
 [dependencies]
 # bevy game engine
-bevy = "0.13"
-bevy_mod_picking = "*" # ready for 0.14
-sickle_ui = { rev = "5a8143f", git = "https://github.com/UmbraLuminosa/sickle_ui" } # ready
-bevy_editor_pls = "*" # waiting
+bevy = "0.14"
+bevy_mod_picking = "0.20"
+sickle_ui = { rev = "ca232db", git = "https://github.com/UmbraLuminosa/sickle_ui" } # ready
+# bevy_editor_pls = "*" # waiting support for 0.14
 # rust random
 rand = "0.8.5"
 rand_pcg = "0.3.1"

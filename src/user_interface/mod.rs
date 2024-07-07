@@ -17,7 +17,7 @@ impl Plugin for UserInterfacePlugin {
         app.add_plugins(settings::SettingsPlugin)
             .add_plugins(menu::MenuScenePlugin)
             .insert_resource(camera::MotionMode::NoMotion)
-            .add_systems(Startup, camera::spawn_primary_camera)
+            .add_systems(PreStartup, camera::spawn_primary_camera)
             .add_systems(
                 Update,
                 (

@@ -1,4 +1,4 @@
-use bevy::prelude::*;
+use bevy::{color::palettes::tailwind, prelude::*};
 
 #[derive(Debug, Clone, Resource)]
 pub struct UiSettings {
@@ -19,10 +19,10 @@ impl Default for UiSettings {
             ui_scale: 1.0,
 
             font: Default::default(),
-            text_color: Color::hex("#d4d4d4").unwrap(),
+            text_color: tailwind::NEUTRAL_300.into(),
 
-            background_color_1: Color::hex("#262626").unwrap().with_a(0.6),
-            background_color_2: Color::hex("#262626").unwrap().with_a(1.0),
+            background_color_1: tailwind::NEUTRAL_800.with_alpha(0.6).into(),
+            background_color_2: tailwind::NEUTRAL_800.with_alpha(1.0).into(),
         }
     }
 }
