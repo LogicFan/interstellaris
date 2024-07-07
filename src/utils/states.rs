@@ -9,22 +9,6 @@ pub enum AppState {
     GameScene,
 }
 
-// TODO: change to sub-state after upgrade to Bevy 0.14
-#[derive(States, Debug, Clone, PartialEq, Eq, Hash)]
-pub enum MenuState {
-    // if `AppState` == `MenuScene`
-    MainMenu,
-    NewGameMenu,
-    LoadGameMenu,
-    SettingsMenu,
-    OnlineMenu,
-    // if `AppState` == `LoadScene`
-    Generating,
-    // if `AppState` == `GameScene`
-    InGame,
-    Paused,
-}
-
 // #[derive(States, Debug, Clone, PartialEq, Eq, Hash)]
 // pub enum GameState {
 //     Running,

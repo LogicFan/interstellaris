@@ -1,6 +1,6 @@
 mod camera;
 mod cursor;
-mod menu;
+mod menu_ui;
 mod settings;
 
 use bevy::prelude::*;
@@ -15,7 +15,7 @@ pub struct UserInterfacePlugin;
 impl Plugin for UserInterfacePlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins(settings::SettingsPlugin)
-            .add_plugins(menu::MenuScenePlugin)
+            .add_plugins(menu_ui::MenuScenePlugin)
             .insert_resource(camera::MotionMode::NoMotion)
             .add_systems(PreStartup, camera::spawn_primary_camera)
             .add_systems(

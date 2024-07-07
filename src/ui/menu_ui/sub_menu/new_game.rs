@@ -1,8 +1,5 @@
 use super::{SubMenuButton, UiCamera, UiSecondaryMenuExt, UiSettings};
-use crate::{
-    game_map::GameMapGenArgs,
-    ui::menu::{AppState, MenuState},
-};
+use crate::{game_map::GameMapGenArgs, ui::menu_ui::AppState};
 use bevy::prelude::*;
 use sickle_ui::prelude::*;
 
@@ -43,12 +40,10 @@ pub fn confirm_button_handler(
     mut commands: Commands,
     mut q_button: Query<(&Interaction, &SubMenuButton), Changed<Interaction>>,
     mut app_state: ResMut<NextState<AppState>>,
-    mut menu_state: ResMut<NextState<MenuState>>,
 ) {
     for (interaction, button) in q_button.iter_mut() {
         if *interaction == Interaction::Pressed && *button == SubMenuButton::Confirm {
             app_state.set(AppState::LoadScene);
-            menu_state.set(MenuState::Generating);
             commands.spawn(GameMapGenArgs::default());
         }
     }

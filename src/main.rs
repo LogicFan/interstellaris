@@ -19,7 +19,6 @@ fn main() {
 
     // internal plugins
     app.insert_state(AppState::MenuScene)
-        .insert_state(MenuState::MainMenu)
         .add_plugins(GampMapGenPlugin)
         .add_plugins(UserInterfacePlugin);
 

@@ -13,13 +13,26 @@ use bevy::prelude::*;
 use main_menu::*;
 use sub_menu::*;
 
+use super::spawn_primary_camera;
+
+#[derive(SubStates, Default, Debug, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
+#[source(AppState = AppState::MenuScene)]
+pub enum MenuState {
+    #[default]
+    MainMenu,
+    NewGameMenu,
+    LoadGameMenu,
+    SettingsMenu,
+    OnlineMenu,
+}
+
 pub struct MenuScenePlugin;
 
 impl Plugin for MenuScenePlugin {
     fn build(&self, app: &mut App) {
-        app
+        app.add_sub_state::<MenuState>()
             // menu background
-            .add_systems(OnEnter(AppState::MenuScene), spawn_menu_background)
+            .add_systems(OnEnter(AppState::MenuScene), spawn_menu_background.after(spawn_primary_camera))
             .add_systems(
                 OnExit(AppState::MenuScene),
                 despawn_entity::<MenuBackground>,
