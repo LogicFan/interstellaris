@@ -1,22 +1,12 @@
-use super::UiSettings;
+use super::{MenuState, UiSettings};
 use bevy::prelude::*;
-use bevy_mod_picking::prelude::{On, Out, Over, Pickable, Pointer};
-use sickle_ui::prelude::{generated::*, UiBuilder, UiContainerExt};
+use bevy_mod_picking::prelude::{Click, On, Out, Over, Pickable, Pointer};
+use sickle_ui::{
+    prelude::{generated::*, UiBuilder, UiColumnExt, UiContainerExt, UiRowExt},
+    ui_builder::UiRoot,
+};
 
-pub trait MenuUiBuilderExt {
-    fn text_button(
-        &mut self,
-        settings: &UiSettings,
-        text: &str,
-        scale: f32,
-    ) -> UiBuilder<'_, Entity>;
-
-    fn large_text_button(&mut self, settings: &UiSettings, text: &str) -> UiBuilder<'_, Entity> {
-        self.text_button(settings, text, 2.0)
-    }
-}
-
-impl MenuUiBuilderExt for UiBuilder<'_, Entity> {
+pub trait MenuUiBuilderExt0: UiColumnExt + UiRowExt + UiContainerExt {
     fn text_button(
         &mut self,
         settings: &UiSettings,
@@ -67,4 +57,64 @@ impl MenuUiBuilderExt for UiBuilder<'_, Entity> {
 
         builder
     }
+
+    fn large_text_button(&mut self, settings: &UiSettings, text: &str) -> UiBuilder<'_, Entity> {
+        self.text_button(settings, text, 2.0)
+    }
+
+    fn medium_text_button(&mut self, settings: &UiSettings, text: &str) -> UiBuilder<'_, Entity> {
+        self.text_button(settings, text, 1.5)
+    }
+
+    fn sub_menu_container<Marker>(
+        &mut self,
+        settings: &UiSettings,
+        confirm_text: &str,
+        confirm_action: impl IntoSystem<(), (), Marker>,
+        spawn_children: impl FnOnce(&mut UiBuilder<Entity>),
+    ) -> UiBuilder<'_, Entity> {
+        let mut builder = self.column(|column| {
+            column
+                .container(NodeBundle::default(), |parent| {
+                    spawn_children(parent);
+                })
+                .style()
+                .border(UiRect::all(Val::Px(1.0)))
+                .justify_content(JustifyContent::Center)
+                .align_content(AlignContent::Center)
+                .border_color(settings.text_color)
+                .background_color(settings.bg_color_none)
+                .width(Val::Percent(100.0))
+                .height(Val::Percent(100.0));
+
+            column
+                .row(|row| {
+                    row.medium_text_button(settings, "Back")
+                        .insert(On::<Pointer<Click>>::run(
+                            |mut state: ResMut<NextState<MenuState>>| {
+                                state.set(MenuState::MainMenu)
+                            },
+                        ));
+
+                    row.medium_text_button(settings, confirm_text)
+                        .insert(On::<Pointer<Click>>::run(confirm_action));
+                })
+                .style()
+                .width(Val::Percent(100.0))
+                .justify_content(JustifyContent::SpaceBetween);
+        });
+
+        builder
+            .style()
+            .row_gap(Val::Px(16.0))
+            .width(Val::Vw(100.0))
+            .height(Val::Vh(100.0))
+            .padding(UiRect::all(Val::Px(32.0)));
+
+        builder
+    }
 }
+
+impl MenuUiBuilderExt0 for UiBuilder<'_, Entity> {}
+
+impl MenuUiBuilderExt0 for UiBuilder<'_, UiRoot> {}

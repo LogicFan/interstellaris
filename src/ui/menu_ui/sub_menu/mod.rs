@@ -1,5 +1,4 @@
 pub mod load_game;
-pub mod new_game;
 pub mod online_game;
 pub mod settings;
 

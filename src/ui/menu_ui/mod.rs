@@ -3,6 +3,7 @@
 mod background;
 mod main_menu;
 mod sub_menu;
+mod new_game_menu;
 mod ui_builder_ext;
 
 pub use crate::ui::camera::PrimaryCamera as UiCamera;
@@ -14,6 +15,7 @@ use background::*;
 use bevy::prelude::*;
 use main_menu::*;
 use sub_menu::*;
+use new_game_menu::*;
 
 #[derive(SubStates, Default, Debug, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
 #[source(AppState = AppState::InMenu)]
@@ -50,11 +52,7 @@ impl Plugin for MenuScenePlugin {
                 ),
             )
             // new game menu
-            .add_systems(OnEnter(MenuState::NewGame), new_game::spawn_new_game_menu)
-            .add_systems(
-                Update,
-                new_game::confirm_button_handler.run_if(in_state(MenuState::NewGame)),
-            )
+            .add_systems(OnEnter(MenuState::NewGame), spawn_new_game_menu)
             // load game menu
             .add_systems(
                 OnEnter(MenuState::LoadGame),

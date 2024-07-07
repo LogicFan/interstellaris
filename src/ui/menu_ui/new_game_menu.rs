@@ -1,10 +1,7 @@
-use super::{MenuState, SubMenuButton, UiCamera, UiSecondaryMenuExt, UiSettings};
+use super::{ui_builder_ext::MenuUiBuilderExt0, MenuState, UiCamera, UiSettings};
 use crate::{game_map::GameMapGenArgs, ui::menu_ui::AppState};
 use bevy::prelude::*;
 use sickle_ui::prelude::*;
-
-#[derive(Component, Clone, Copy, Debug, Default)]
-pub struct NewGameMenu;
 
 pub fn spawn_new_game_menu(
     mut commands: Commands,
@@ -15,7 +12,7 @@ pub fn spawn_new_game_menu(
 
     commands
         .ui_builder(UiRoot)
-        .secondary_menu(&ui_settings, "Start", |parent| {
+        .sub_menu_container(&ui_settings, "Start", confirm_button_handler, |parent| {
             parent
                 .spawn(
                     TextBundle::from_section(
@@ -32,20 +29,11 @@ pub fn spawn_new_game_menu(
                 .justify_self(JustifySelf::Center);
         })
         .insert(TargetCamera(camera))
-        .insert(NewGameMenu)
         .insert(Name::new("New Game Menu"))
         .insert(StateScoped(MenuState::NewGame));
 }
 
-pub fn confirm_button_handler(
-    mut commands: Commands,
-    mut q_button: Query<(&Interaction, &SubMenuButton), Changed<Interaction>>,
-    mut app_state: ResMut<NextState<AppState>>,
-) {
-    for (interaction, button) in q_button.iter_mut() {
-        if *interaction == Interaction::Pressed && *button == SubMenuButton::Confirm {
-            app_state.set(AppState::Loading);
-            commands.spawn(GameMapGenArgs::default());
-        }
-    }
+fn confirm_button_handler(mut commands: Commands, mut app_state: ResMut<NextState<AppState>>) {
+    app_state.set(AppState::Loading);
+    commands.spawn(GameMapGenArgs::default());
 }
