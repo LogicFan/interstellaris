@@ -36,7 +36,7 @@
 use bevy::prelude::*;
 mod free_motion;
 
-pub use crate::user_interface::settings::InputSettings;
+pub use crate::ui::settings::InputSettings;
 
 pub use free_motion::*;
 

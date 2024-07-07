@@ -1,4 +1,4 @@
-use crate::user_interface::PrimaryCamera;
+use crate::ui::PrimaryCamera;
 use bevy::prelude::*;
 use sickle_ui::prelude::*;
 

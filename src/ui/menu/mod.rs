@@ -4,8 +4,8 @@ mod background;
 mod main_menu;
 mod sub_menu;
 
-pub use crate::user_interface::camera::PrimaryCamera as UiCamera;
-pub use crate::user_interface::settings::UiSettings;
+pub use crate::ui::camera::PrimaryCamera as UiCamera;
+pub use crate::ui::settings::UiSettings;
 
 use crate::utils::*;
 use background::*;

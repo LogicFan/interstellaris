@@ -3,5 +3,5 @@
 pub mod fleet;
 pub mod game_map;
 pub mod planetary_system;
-pub mod user_interface;
+pub mod ui;
 pub mod utils;

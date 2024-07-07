@@ -3,7 +3,7 @@ use bevy::prelude::*;
 use bevy_mod_picking::DefaultPickingPlugins;
 use sickle_ui::SickleUiPlugin;
 use stellaris::game_map::GampMapGenPlugin;
-use stellaris::user_interface::*;
+use stellaris::ui::*;
 use stellaris::utils::*;
 
 fn main() {

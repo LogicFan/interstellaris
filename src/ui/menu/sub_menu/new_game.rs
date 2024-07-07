@@ -1,7 +1,7 @@
 use super::{SubMenuButton, UiCamera, UiSecondaryMenuExt, UiSettings};
 use crate::{
     game_map::GameMapGenArgs,
-    user_interface::menu::{AppState, MenuState},
+    ui::menu::{AppState, MenuState},
 };
 use bevy::prelude::*;
 use sickle_ui::prelude::*;
