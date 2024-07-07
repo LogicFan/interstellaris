@@ -1,3 +1,5 @@
+//! a module for the start menu.
+
 mod background;
 mod main_menu;
 mod sub_menu;
@@ -10,7 +12,6 @@ use background::*;
 use bevy::prelude::*;
 use main_menu::*;
 use sub_menu::*;
-// use new_game_menu::*;
 
 pub struct MenuScenePlugin;
 
@@ -41,32 +42,47 @@ impl Plugin for MenuScenePlugin {
                 ),
             )
             // new game menu
-            .add_systems(OnEnter(MenuState::NewGameMenu), spawn_new_game_menu)
+            .add_systems(
+                OnEnter(MenuState::NewGameMenu),
+                new_game::spawn_new_game_menu,
+            )
             .add_systems(
                 OnExit(MenuState::NewGameMenu),
-                despawn_entity::<NewGameMenu>,
+                despawn_entity::<new_game::NewGameMenu>,
+            )
+            .add_systems(
+                Update,
+                new_game::confirm_button_handler.run_if(in_state(MenuState::NewGameMenu)),
             )
             // load game menu
-            .add_systems(OnEnter(MenuState::LoadGameMenu), spawn_load_game_menu)
+            .add_systems(
+                OnEnter(MenuState::LoadGameMenu),
+                load_game::spawn_load_game_menu,
+            )
             .add_systems(
                 OnExit(MenuState::LoadGameMenu),
-                despawn_entity::<LoadGameMenu>,
+                despawn_entity::<load_game::LoadGameMenu>,
             )
             // online menu
-            .add_systems(OnEnter(MenuState::OnlineMenu), spawn_online_menu)
+            .add_systems(OnEnter(MenuState::OnlineMenu), online::spawn_online_menu)
             .add_systems(
                 OnExit(MenuState::OnlineMenu),
-                despawn_entity::<OnlineMenu>,
+                despawn_entity::<online::OnlineMenu>,
             )
             // settings menu
-            .add_systems(OnEnter(MenuState::SettingsMenu), spawn_settings_menu)
+            .add_systems(
+                OnEnter(MenuState::SettingsMenu),
+                settings::spawn_settings_menu,
+            )
             .add_systems(
                 OnExit(MenuState::SettingsMenu),
-                despawn_entity::<SettingsMenu>,
+                despawn_entity::<settings::SettingsMenu>,
             );
     }
 }
 
+/// despawn entity and its children.
+/// TODO: use State Scoped Entities after Bevy 0.14
 pub fn despawn_entity<T>(mut commands: Commands, q_entity: Query<Entity, With<T>>)
 where
     T: Component,

@@ -1,4 +1,6 @@
-use super::{UiSecondaryMenuExt, UiSettings, UiCamera};
+use crate::user_interface::menu::AppState;
+
+use super::{SubMenuButton, UiCamera, UiSecondaryMenuExt, UiSettings};
 use bevy::prelude::*;
 use sickle_ui::prelude::*;
 
@@ -34,3 +36,16 @@ pub fn spawn_new_game_menu(
         .insert(NewGameMenu)
         .insert(Name::new("New Game Menu"));
 }
+
+
+pub fn confirm_button_handler(
+    mut q_button: Query<(&Interaction, &SubMenuButton), Changed<Interaction>>,
+    mut app_state: ResMut<NextState<AppState>>,
+) {
+    for (interaction, button) in q_button.iter_mut() {
+        if *interaction == Interaction::Pressed && *button == SubMenuButton::Return {
+            app_state.set(AppState::LoadScene)
+        }
+    }
+}
+

@@ -4,13 +4,13 @@ use bevy::prelude::*;
 pub struct UiSettings {
     /// 1.0 is the normal size
     pub ui_scale: f32,
-    
+
     #[allow(unused)]
     pub font: Handle<Font>,
     pub text_color: Color,
 
     pub background_color_1: Color,
-    pub background_color_2: Color,    
+    pub background_color_2: Color,
 }
 
 impl Default for UiSettings {
@@ -22,7 +22,7 @@ impl Default for UiSettings {
             text_color: Color::hex("#d4d4d4").unwrap(),
 
             background_color_1: Color::hex("#262626").unwrap().with_a(0.6),
-            background_color_2: Color::hex("#262626").unwrap().with_a(1.0),  
+            background_color_2: Color::hex("#262626").unwrap().with_a(1.0),
         }
     }
 }

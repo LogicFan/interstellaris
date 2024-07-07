@@ -1,16 +1,12 @@
-mod load_game_menu;
-mod new_game_menu;
-mod online_menu;
-mod settings_menu;
+pub mod load_game;
+pub mod new_game;
+pub mod online;
+pub mod settings;
 
-use super::MenuState;
 pub use super::UiCamera;
 pub use super::UiSettings;
-pub use load_game_menu::*;
-pub use new_game_menu::*;
-pub use online_menu::*;
-pub use settings_menu::*;
 
+use super::MenuState;
 use bevy::prelude::*;
 use sickle_ui::prelude::*;
 
@@ -104,15 +100,11 @@ impl UiSecondaryMenuExt for UiBuilder<'_, UiRoot> {
 #[derive(Component, Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub enum SubMenuButton {
     Return,
-    Confirm
+    Confirm,
 }
 
-
 pub fn sub_menu_button_handler(
-    mut q_button: Query<
-        (&mut BackgroundColor, &Interaction, &SubMenuButton),
-        Changed<Interaction>,
-    >,
+    mut q_button: Query<(&mut BackgroundColor, &Interaction, &SubMenuButton), Changed<Interaction>>,
     mut menu_state: ResMut<NextState<MenuState>>,
     ui_settings: Res<UiSettings>,
 ) {

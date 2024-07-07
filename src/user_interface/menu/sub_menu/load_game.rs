@@ -1,4 +1,4 @@
-use super::{UiSecondaryMenuExt, UiSettings, UiCamera};
+use super::{UiCamera, UiSecondaryMenuExt, UiSettings};
 use bevy::prelude::*;
 use sickle_ui::prelude::*;
 

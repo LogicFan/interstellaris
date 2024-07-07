@@ -4,6 +4,7 @@
         "consts",
         "despawn",
         "egui",
+        "powf",
         "recip",
         "stellaris"
     ]

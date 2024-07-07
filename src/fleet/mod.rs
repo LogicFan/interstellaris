@@ -1,4 +1,4 @@
-use crate::planetary_system::api::Coordinate;
+use crate::game_map::Coordinate;
 use crate::utils::*;
 use bevy::prelude::*;
 

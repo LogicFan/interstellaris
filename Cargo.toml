@@ -12,10 +12,14 @@ opt-level = 1
 opt-level = 3
 
 [dependencies]
+# bevy game engine
 bevy = "0.13"
 bevy_rapier3d = "*"
 bevy_mod_picking = "*"
 sickle_ui = { rev = "5a8143f", git = "https://github.com/UmbraLuminosa/sickle_ui" }
-uuid = "1.8"
-rand = "0.8.5"
 bevy_editor_pls = "*"
+# rust random
+rand = "0.8.5"
+rand_pcg = "0.3.1"
+# others
+uuid = "1.9.1"

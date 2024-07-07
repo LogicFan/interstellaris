@@ -2,6 +2,9 @@
 
 ## 0.1.0
 
+### 2024-07-05
+- add main menu.
+
 ### 2024-06-27
 - control camera movement in free motion mode.
 

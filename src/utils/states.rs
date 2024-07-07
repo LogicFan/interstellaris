@@ -1,12 +1,15 @@
 use bevy::prelude::*;
 
 /// The high-level state of the app
-#[derive(States, Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(States, Default, Debug, Clone, PartialEq, Eq, Hash)]
 pub enum AppState {
+    #[default]
     MenuScene,
+    LoadScene,
     GameScene,
 }
 
+// TODO: change to sub-state after upgrade to Bevy 0.14
 #[derive(States, Debug, Clone, PartialEq, Eq, Hash)]
 pub enum MenuState {
     // if `AppState` == `MenuScene`
