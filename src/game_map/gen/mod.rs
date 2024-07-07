@@ -8,12 +8,12 @@ use bevy::prelude::*;
 use rand::{thread_rng, RngCore};
 use rand_pcg::Pcg64Mcg;
 
+use crate::utils::AppState;
+
 #[derive(Component, Debug, Clone)]
 pub struct GameMapGenArgs {
-    /// the random seed of game map
     pub rng: Pcg64Mcg,
-
-    pub galaxy_args: GalaxyGenArgs,
+    pub galaxy: GalaxyGenArgs,
 }
 
 impl Default for GameMapGenArgs {
@@ -24,7 +24,15 @@ impl Default for GameMapGenArgs {
 
         Self {
             rng: Pcg64Mcg::new(random_seed),
-            galaxy_args: default(),
+            galaxy: default(),
         }
+    }
+}
+
+pub struct GampMapGenPlugin;
+
+impl Plugin for GampMapGenPlugin {
+    fn build(&self, app: &mut App) {
+        app.add_systems(OnEnter(AppState::LoadScene), init_galaxy);
     }
 }

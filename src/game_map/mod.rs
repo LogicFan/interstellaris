@@ -1,6 +1,6 @@
 mod gen;
 
-pub use gen::init_galaxy;
+pub use gen::*;
 
 use crate::utils::ObjectRef;
 use bevy::prelude::Component;

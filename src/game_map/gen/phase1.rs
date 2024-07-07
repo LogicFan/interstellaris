@@ -3,11 +3,15 @@ use bevy::prelude::*;
 use rand::distributions::{Distribution, Uniform};
 use rand_pcg::Pcg64Mcg;
 
-pub fn init_galaxy(mut commands: Commands, asset: Res<AssetServer>, q_args: Query<&GameMapGenArgs>) {
+pub fn init_galaxy(
+    mut commands: Commands,
+    asset: Res<AssetServer>,
+    q_args: Query<&GameMapGenArgs>,
+) {
     let args = q_args.single();
     let mut rng = args.rng.clone();
 
-    let positions = gen_positions(&mut rng, args.galaxy_args);
+    let positions = gen_positions(&mut rng, args.galaxy);
 
     let mesh = asset.add(Cuboid::new(0.5, 0.5, 0.5).into());
     let material = asset.add(StandardMaterial {

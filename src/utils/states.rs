@@ -18,6 +18,8 @@ pub enum MenuState {
     LoadGameMenu,
     SettingsMenu,
     OnlineMenu,
+    // if `AppState` == `LoadScene`
+    Generating,
     // if `AppState` == `GameScene`
     InGame,
     Paused,
