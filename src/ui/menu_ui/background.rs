@@ -1,6 +1,7 @@
 use crate::ui::{menu_ui::AppState, PrimaryCamera};
 use bevy::prelude::*;
-use sickle_ui::prelude::*;
+use bevy_mod_picking::picking_core::Pickable;
+use sickle_ui::prelude::{generated::*, UiBuilderExt, UiRoot};
 
 /// A marker component for background image.
 #[derive(Component, Clone, Copy, Debug, Default)]
@@ -31,6 +32,7 @@ pub fn spawn_menu_background(
         .insert(Name::new("Menu Background"))
         .insert(MenuBackground)
         .insert(StateScoped(AppState::InMenu))
+        .insert(Pickable::IGNORE)
         .style()
         .align_self(AlignSelf::Center)
         .justify_self(JustifySelf::Center)

@@ -1,6 +1,6 @@
 use super::UiSettings;
 use bevy::prelude::*;
-use bevy_mod_picking::prelude::*;
+use bevy_mod_picking::prelude::{On, Out, Over, Pickable, Pointer};
 use sickle_ui::prelude::{generated::*, UiBuilder, UiContainerExt};
 
 pub trait MenuUiBuilderExt {
