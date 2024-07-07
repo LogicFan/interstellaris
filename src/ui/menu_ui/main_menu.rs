@@ -40,6 +40,7 @@ pub fn spawn_main_menu(
         .insert(TargetCamera(camera))
         .insert(MainMenu)
         .insert(Name::new("Main Menu"))
+        .insert(StateScoped(MenuState::MainMenu))
         .style()
         .row_gap(Val::Px(16.0))
         .align_self(AlignSelf::Center)
@@ -61,10 +62,10 @@ pub enum MainMenuButton {
 impl MainMenuButton {
     fn menu_state(&self) -> MenuState {
         match self {
-            MainMenuButton::NewGame => MenuState::NewGameMenu,
-            MainMenuButton::LoadGame => MenuState::LoadGameMenu,
+            MainMenuButton::NewGame => MenuState::NewGame,
+            MainMenuButton::LoadGame => MenuState::LoadGame,
             MainMenuButton::Settings => MenuState::SettingsMenu,
-            MainMenuButton::Online => MenuState::OnlineMenu,
+            MainMenuButton::Online => MenuState::OnlineGame,
             MainMenuButton::Exit => std::process::exit(0),
         }
     }

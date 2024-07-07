@@ -3,12 +3,11 @@ mod phase1;
 
 pub use phase1::init_galaxy;
 
+use crate::AppState;
 use args::GalaxyGenArgs;
 use bevy::prelude::*;
 use rand::{thread_rng, RngCore};
 use rand_pcg::Pcg64Mcg;
-
-use crate::utils::AppState;
 
 #[derive(Component, Debug, Clone)]
 pub struct GameMapGenArgs {
@@ -33,6 +32,6 @@ pub struct GampMapGenPlugin;
 
 impl Plugin for GampMapGenPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(OnEnter(AppState::LoadScene), init_galaxy);
+        app.add_systems(OnEnter(AppState::Loading), init_galaxy);
     }
 }

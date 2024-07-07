@@ -7,23 +7,22 @@ mod sub_menu;
 pub use crate::ui::camera::PrimaryCamera as UiCamera;
 pub use crate::ui::settings::UiSettings;
 
-use crate::utils::*;
+use super::spawn_primary_camera;
+use crate::AppState;
 use background::*;
 use bevy::prelude::*;
 use main_menu::*;
 use sub_menu::*;
 
-use super::spawn_primary_camera;
-
 #[derive(SubStates, Default, Debug, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
-#[source(AppState = AppState::MenuScene)]
+#[source(AppState = AppState::InMenu)]
 pub enum MenuState {
     #[default]
     MainMenu,
-    NewGameMenu,
-    LoadGameMenu,
+    NewGame,
+    LoadGame,
     SettingsMenu,
-    OnlineMenu,
+    OnlineGame,
 }
 
 pub struct MenuScenePlugin;
@@ -31,15 +30,14 @@ pub struct MenuScenePlugin;
 impl Plugin for MenuScenePlugin {
     fn build(&self, app: &mut App) {
         app.add_sub_state::<MenuState>()
+            .enable_state_scoped_entities::<MenuState>()
             // menu background
-            .add_systems(OnEnter(AppState::MenuScene), spawn_menu_background.after(spawn_primary_camera))
             .add_systems(
-                OnExit(AppState::MenuScene),
-                despawn_entity::<MenuBackground>,
+                OnEnter(AppState::InMenu),
+                spawn_menu_background.after(spawn_primary_camera),
             )
             // main menu
             .add_systems(OnEnter(MenuState::MainMenu), spawn_main_menu)
-            .add_systems(OnExit(MenuState::MainMenu), despawn_entity::<MainMenu>)
             .add_systems(
                 Update,
                 main_menu_button_handler.run_if(in_state(MenuState::MainMenu)),
@@ -48,58 +46,32 @@ impl Plugin for MenuScenePlugin {
             .add_systems(
                 Update,
                 sub_menu_button_handler.run_if(
-                    in_state(MenuState::NewGameMenu)
-                        .or_else(in_state(MenuState::LoadGameMenu))
-                        .or_else(in_state(MenuState::OnlineMenu))
+                    in_state(MenuState::NewGame)
+                        .or_else(in_state(MenuState::LoadGame))
+                        .or_else(in_state(MenuState::OnlineGame))
                         .or_else(in_state(MenuState::SettingsMenu)),
                 ),
             )
             // new game menu
-            .add_systems(
-                OnEnter(MenuState::NewGameMenu),
-                new_game::spawn_new_game_menu,
-            )
-            .add_systems(
-                OnExit(MenuState::NewGameMenu),
-                despawn_entity::<new_game::NewGameMenu>,
-            )
+            .add_systems(OnEnter(MenuState::NewGame), new_game::spawn_new_game_menu)
             .add_systems(
                 Update,
-                new_game::confirm_button_handler.run_if(in_state(MenuState::NewGameMenu)),
+                new_game::confirm_button_handler.run_if(in_state(MenuState::NewGame)),
             )
             // load game menu
             .add_systems(
-                OnEnter(MenuState::LoadGameMenu),
+                OnEnter(MenuState::LoadGame),
                 load_game::spawn_load_game_menu,
             )
-            .add_systems(
-                OnExit(MenuState::LoadGameMenu),
-                despawn_entity::<load_game::LoadGameMenu>,
-            )
             // online menu
-            .add_systems(OnEnter(MenuState::OnlineMenu), online::spawn_online_menu)
             .add_systems(
-                OnExit(MenuState::OnlineMenu),
-                despawn_entity::<online::OnlineMenu>,
+                OnEnter(MenuState::OnlineGame),
+                online_game::spawn_online_menu,
             )
             // settings menu
             .add_systems(
                 OnEnter(MenuState::SettingsMenu),
                 settings::spawn_settings_menu,
-            )
-            .add_systems(
-                OnExit(MenuState::SettingsMenu),
-                despawn_entity::<settings::SettingsMenu>,
             );
     }
-}
-
-/// despawn entity and its children.
-/// TODO: use State Scoped Entities after Bevy 0.14
-pub fn despawn_entity<T>(mut commands: Commands, q_entity: Query<Entity, With<T>>)
-where
-    T: Component,
-{
-    let entity = q_entity.single();
-    commands.entity(entity).despawn_recursive();
 }

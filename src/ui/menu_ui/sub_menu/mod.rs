@@ -1,12 +1,12 @@
 pub mod load_game;
 pub mod new_game;
-pub mod online;
+pub mod online_game;
 pub mod settings;
 
+pub use super::MenuState;
 pub use super::UiCamera;
 pub use super::UiSettings;
 
-use super::MenuState;
 use bevy::prelude::*;
 use sickle_ui::prelude::*;
 

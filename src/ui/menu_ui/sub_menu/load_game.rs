@@ -1,4 +1,4 @@
-use super::{UiCamera, UiSecondaryMenuExt, UiSettings};
+use super::{MenuState, UiCamera, UiSecondaryMenuExt, UiSettings};
 use bevy::prelude::*;
 use sickle_ui::prelude::*;
 
@@ -32,5 +32,6 @@ pub fn spawn_load_game_menu(
         })
         .insert(TargetCamera(camera))
         .insert(LoadGameMenu)
-        .insert(Name::new("Load Game Menu"));
+        .insert(Name::new("Load Game Menu"))
+        .insert(StateScoped(MenuState::LoadGame));
 }

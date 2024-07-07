@@ -1,4 +1,4 @@
-use super::{UiCamera, UiSecondaryMenuExt, UiSettings};
+use super::{MenuState, UiCamera, UiSecondaryMenuExt, UiSettings};
 use bevy::prelude::*;
 use sickle_ui::prelude::*;
 
@@ -32,5 +32,6 @@ pub fn spawn_settings_menu(
         })
         .insert(TargetCamera(camera))
         .insert(SettingsMenu)
-        .insert(Name::new("Settings Menu"));
+        .insert(Name::new("Settings Menu"))
+        .insert(StateScoped(MenuState::SettingsMenu));
 }

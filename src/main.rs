@@ -4,7 +4,7 @@ use bevy_mod_picking::DefaultPickingPlugins;
 use sickle_ui::SickleUiPlugin;
 use stellaris::game_map::GampMapGenPlugin;
 use stellaris::ui::*;
-use stellaris::utils::*;
+use stellaris::*;
 
 fn main() {
     let mut app = App::new();
@@ -18,7 +18,7 @@ fn main() {
     // app.add_plugins(EditorPlugin::default());
 
     // internal plugins
-    app.insert_state(AppState::MenuScene)
+    app.add_plugins(CorePlugin)
         .add_plugins(GampMapGenPlugin)
         .add_plugins(UserInterfacePlugin);
 

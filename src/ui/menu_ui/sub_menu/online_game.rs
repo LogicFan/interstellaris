@@ -1,4 +1,4 @@
-use super::{UiCamera, UiSecondaryMenuExt, UiSettings};
+use super::{MenuState, UiCamera, UiSecondaryMenuExt, UiSettings};
 use bevy::prelude::*;
 use sickle_ui::prelude::*;
 
@@ -32,5 +32,6 @@ pub fn spawn_online_menu(
         })
         .insert(TargetCamera(camera))
         .insert(OnlineMenu)
-        .insert(Name::new("Online Menu"));
+        .insert(Name::new("Online Game Menu"))
+        .insert(StateScoped(MenuState::OnlineGame));
 }

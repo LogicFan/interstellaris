@@ -30,6 +30,7 @@ pub fn spawn_menu_background(
         .insert(TargetCamera(camera))
         .insert(Name::new("Menu Background"))
         .insert(MenuBackground)
+        .insert(StateScoped(AppState::InMenu))
         .style()
         .align_self(AlignSelf::Center)
         .justify_self(JustifySelf::Center)
