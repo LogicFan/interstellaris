@@ -9,8 +9,8 @@ pub struct UiSettings {
     pub font: Handle<Font>,
     pub text_color: Color,
 
-    pub background_color_1: Color,
-    pub background_color_2: Color,
+    pub bg_color_none: Color,
+    pub bg_color_focus: Color,
 }
 
 impl Default for UiSettings {
@@ -21,8 +21,8 @@ impl Default for UiSettings {
             font: Default::default(),
             text_color: tailwind::NEUTRAL_300.into(),
 
-            background_color_1: tailwind::NEUTRAL_800.with_alpha(0.6).into(),
-            background_color_2: tailwind::NEUTRAL_800.with_alpha(1.0).into(),
+            bg_color_none: tailwind::NEUTRAL_700.into(),
+            bg_color_focus: tailwind::NEUTRAL_800.into(),
         }
     }
 }

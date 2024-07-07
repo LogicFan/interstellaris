@@ -3,6 +3,7 @@
 mod background;
 mod main_menu;
 mod sub_menu;
+mod ui_builder_ext;
 
 pub use crate::ui::camera::PrimaryCamera as UiCamera;
 pub use crate::ui::settings::UiSettings;

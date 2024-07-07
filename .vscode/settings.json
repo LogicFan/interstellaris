@@ -4,6 +4,7 @@
         "consts",
         "despawn",
         "egui",
+        "Pickable",
         "powf",
         "recip",
         "stellaris"

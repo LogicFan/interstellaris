@@ -36,7 +36,7 @@ impl UiSecondaryMenuExt for UiBuilder<'_, UiRoot> {
                 .justify_content(JustifyContent::Center)
                 .align_content(AlignContent::Center)
                 .border_color(settings.text_color)
-                .background_color(settings.background_color_1)
+                .background_color(settings.bg_color_none)
                 .width(Val::Percent(100.0))
                 .height(Val::Percent(100.0));
 
@@ -62,7 +62,7 @@ impl UiSecondaryMenuExt for UiBuilder<'_, UiRoot> {
                     .padding(UiRect::vertical(Val::Px(4.0)))
                     .border(UiRect::all(Val::Px(1.0)))
                     .border_color(settings.text_color)
-                    .background_color(settings.background_color_1);
+                    .background_color(settings.bg_color_none);
 
                     row.container(ButtonBundle::default(), |parent| {
                         parent.spawn(
@@ -78,7 +78,7 @@ impl UiSecondaryMenuExt for UiBuilder<'_, UiRoot> {
                     .padding(UiRect::vertical(Val::Px(4.0)))
                     .border(UiRect::all(Val::Px(1.0)))
                     .border_color(settings.text_color)
-                    .background_color(settings.background_color_1);
+                    .background_color(settings.bg_color_none);
                 })
                 .style()
                 .width(Val::Percent(100.0))
@@ -111,16 +111,16 @@ pub fn sub_menu_button_handler(
     for (mut background_color, interaction, button) in q_button.iter_mut() {
         match *interaction {
             Interaction::Pressed => {
-                background_color.0 = ui_settings.background_color_2;
+                background_color.0 = ui_settings.bg_color_focus;
                 if *button == SubMenuButton::Return {
                     menu_state.set(MenuState::MainMenu);
                 }
             }
             Interaction::Hovered => {
-                background_color.0 = ui_settings.background_color_2;
+                background_color.0 = ui_settings.bg_color_focus;
             }
             Interaction::None => {
-                background_color.0 = ui_settings.background_color_1;
+                background_color.0 = ui_settings.bg_color_none;
             }
         }
     }
