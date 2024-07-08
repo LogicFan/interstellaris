@@ -7,6 +7,8 @@
         "Pickable",
         "powf",
         "recip",
-        "stellaris"
+        "stellaris",
+        "voronoi",
+        "voronoice"
     ]
 }

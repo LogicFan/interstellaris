@@ -13,7 +13,7 @@ pub struct GalaxyGenArgs {
 impl Default for GalaxyGenArgs {
     fn default() -> Self {
         Self {
-            size: 8192,
+            size: 256,
             density: 0.25,
             remnant: 0,
             nebula: 0,
