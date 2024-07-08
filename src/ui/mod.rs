@@ -1,4 +1,4 @@
-mod camera;
+pub mod camera;
 mod cursor;
 mod menu_ui;
 mod settings;

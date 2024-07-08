@@ -1,4 +1,4 @@
-mod primary_camera;
+pub mod primary_camera;
 
 use bevy::prelude::*;
 
