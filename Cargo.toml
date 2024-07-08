@@ -22,3 +22,5 @@ rand = "0.8.5"
 rand_pcg = "0.3.1"
 # others
 uuid = "1.9.1"
+float-ord = "0.3.2"
+voronoice = "0.2.0"
