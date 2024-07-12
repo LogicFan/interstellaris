@@ -2,9 +2,9 @@
 
 pub mod fleet;
 pub mod game_map;
+pub mod object_id;
 pub mod planetary_system;
 pub mod ui;
-pub mod utils;
 
 use bevy::prelude::*;
 

@@ -1,4 +1,4 @@
-use crate::utils::{ObjectId, ObjectRef};
+use crate::object_id::{ObjectId, ObjectRef};
 use bevy::prelude::*;
 
 #[derive(Debug, Default, Clone, Copy, Component)]

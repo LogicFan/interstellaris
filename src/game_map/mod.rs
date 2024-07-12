@@ -2,7 +2,7 @@ mod gen;
 
 pub use gen::*;
 
-use crate::utils::ObjectRef;
+use crate::object_id::ObjectRef;
 use bevy::prelude::Component;
 
 /// Determine which coordinate system the entity is using. If it's None, then
