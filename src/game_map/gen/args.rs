@@ -14,7 +14,7 @@ impl Default for GalaxyGenArgs {
     fn default() -> Self {
         Self {
             size: 4096,
-            density: 0.25,
+            density: 0.0625,
             remnant: 0,
             nebula: 0,
         }

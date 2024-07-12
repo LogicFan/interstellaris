@@ -59,7 +59,7 @@ pub fn init_galaxy(
     }
 
     let radius = 0.5 * (args.galaxy.size as f32 / args.galaxy.density).sqrt();
-    *cam_mo = MotionMode::FreeMotion { min_h: 32.0, max_h: 100.0, max_θ: PI / 6.0, max_r: radius };
+    *cam_mo = MotionMode::FreeMotion { min_h: 32.0, max_h: 100.0, max_θ: PI / 3.0, max_r: radius };
 }
 
 fn gen_planetary_systems(rng0: Pcg64Mcg, args: GalaxyGenArgs) -> Vec<PlanetarySystemArgs> {
@@ -78,14 +78,14 @@ fn gen_planetary_systems(rng0: Pcg64Mcg, args: GalaxyGenArgs) -> Vec<PlanetarySy
 fn random_positions(rng: &mut Pcg64Mcg, radius: f32, size: usize) -> Vec<Vec3> {
     let mut positions = BTreeMap::<FloatOrd<f32>, Vec3>::new();
 
-    let height = 4.0;
+    let height = 1.0;
     let radius_distr = Uniform::new_inclusive(-radius, radius);
     let height_distr = Uniform::new_inclusive(-height, height);
 
     let iterations = size * 2;
 
     'outer: for _ in 0..iterations {
-        const DELTA: f32 = 0.21;
+        const DELTA: f32 = 1.0;
 
         let x = radius_distr.sample(rng);
         let y = radius_distr.sample(rng);
@@ -94,7 +94,7 @@ fn random_positions(rng: &mut Pcg64Mcg, radius: f32, size: usize) -> Vec<Vec3> {
 
         // reject this value if it is to close to a existing one.
         for (_, other) in positions.range(FloatOrd(x - DELTA)..=FloatOrd(x + DELTA)) {
-            if candidate.distance(*other) < DELTA {
+            if candidate.xy().distance(other.xy()) < DELTA {
                 continue 'outer;
             }
         }
@@ -110,6 +110,7 @@ fn random_positions(rng: &mut Pcg64Mcg, radius: f32, size: usize) -> Vec<Vec3> {
 }
 
 fn compute_mass(positions: &Vec<Vec3>, radius: f32, density: f32) -> Vec<f32> {
+    // TODO: change to 3d Voronoi cell calculate using voro_rs
     let sites: Vec<_> = positions
         .iter()
         .map(|e| voronoice::Point {
@@ -120,6 +121,7 @@ fn compute_mass(positions: &Vec<Vec3>, radius: f32, density: f32) -> Vec<f32> {
 
     let voronoi = voronoice::VoronoiBuilder::default()
         .set_sites(sites)
+        .set_lloyd_relaxation_iterations(0)
         .set_bounding_box(voronoice::BoundingBox::new_centered_square(
             (radius * 2.0) as f64,
         ))
