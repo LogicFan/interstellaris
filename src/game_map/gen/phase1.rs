@@ -46,7 +46,8 @@ pub fn init_galaxy(
     for ps in x {
         commands.spawn((
             PlanetarySystemBundle {
-                transform: Transform::from_translation(ps.position).with_scale(Vec3::ONE * ps.mass * 0.4),
+                transform: Transform::from_translation(ps.position)
+                    .with_scale(Vec3::ONE * ps.mass * 0.4),
                 ..default()
             },
             VPlanetarySystemBundle {
@@ -59,7 +60,12 @@ pub fn init_galaxy(
     }
 
     let radius = 0.5 * (args.galaxy.size as f32 / args.galaxy.density).sqrt();
-    *cam_mo = MotionMode::FreeMotion { min_h: 32.0, max_h: 100.0, max_θ: PI / 3.0, max_r: radius };
+    *cam_mo = MotionMode::FreeMotion {
+        min_h: 32.0,
+        max_h: 100.0,
+        max_θ: PI / 3.0,
+        max_r: radius,
+    };
 }
 
 fn gen_planetary_systems(rng0: Pcg64Mcg, args: GalaxyGenArgs) -> Vec<PlanetarySystemArgs> {
