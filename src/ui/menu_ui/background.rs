@@ -1,4 +1,4 @@
-use crate::ui::{menu_ui::AppState, PrimaryCamera};
+use crate::ui::PrimaryCamera;
 use bevy::prelude::*;
 use bevy_mod_picking::picking_core::Pickable;
 use sickle_ui::prelude::{generated::*, UiBuilderExt, UiRoot};
@@ -23,6 +23,7 @@ pub fn spawn_background(
         .ui_builder(UiRoot)
         .spawn(ImageBundle {
             image: UiImage {
+                color: Color::srgba(1.0, 1.0, 1.0, 0.5),
                 texture: image,
                 ..default()
             },
