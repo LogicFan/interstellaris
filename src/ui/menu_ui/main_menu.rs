@@ -6,9 +6,10 @@ use bevy::prelude::*;
 use bevy_mod_picking::prelude::*;
 use sickle_ui::prelude::{generated::*, UiBuilderExt, UiColumnExt, UiRoot};
 
-/// Spawn the main menu.
+/// Spawn the UI for main menu.
+/// 
 /// # Schedule
-/// `OnEnter(MenuState::MainMenu)`
+/// Enter [super::MenuState::MainMenu]
 pub fn spawn_main_menu(
     mut commands: Commands,
     q_camera: Query<Entity, With<UiCamera>>,
