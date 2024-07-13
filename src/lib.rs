@@ -24,7 +24,6 @@ pub enum AppState {
     #[default]
     Setup,
     InMenu,
-    // TODO: make this into the sub-state of InMenu
     Loading,
     InGame,
 }
