@@ -8,21 +8,8 @@ use rand_pcg::Pcg64Mcg;
 use std::{collections::BTreeMap, f32::consts::PI};
 use voronoice::{self, VoronoiCell};
 
-#[derive(Component, Debug, Default, Clone, Copy)]
-pub struct PlanetarySystemArgs {
-    position: Vec3,
-    mass: f32,
-    // TODO: add remnant and nebula
-}
-
-impl PlanetarySystemArgs {
-    fn new(position: Vec3, mass: f32) -> Self {
-        Self { position, mass }
-    }
-}
-
 #[derive(Component, Debug)]
-pub struct PlanetarySystemGenTask(Task<Vec<PlanetarySystemArgs>>);
+pub struct PlanetarySystemGenTask(Task<Vec<PlaSysArgs>>);
 
 pub fn init_galaxy(
     mut commands: Commands,
@@ -68,14 +55,27 @@ pub fn init_galaxy(
     };
 }
 
-fn gen_planetary_systems(rng0: Pcg64Mcg, args: GalaxyGenArgs) -> Vec<PlanetarySystemArgs> {
+#[derive(Component, Debug, Default, Clone, Copy)]
+pub struct PlaSysArgs {
+    position: Vec3,
+    mass: f32,
+    // TODO: add remnant and nebula
+}
+
+impl PlaSysArgs {
+    fn new(position: Vec3, mass: f32) -> Self {
+        Self { position, mass }
+    }
+}
+
+fn gen_planetary_systems(rng0: Pcg64Mcg, args: GalaxyGenArgs) -> Vec<PlaSysArgs> {
     let mut rng = rng0.clone();
     let radius = 0.5 * (args.size as f32 / args.density).sqrt();
 
     let positions = random_positions(&mut rng, radius, args.size as usize);
     let masses = compute_mass(&positions, radius, args.density);
     let planetary_systems = std::iter::zip(positions, masses)
-        .map(|(p, m)| PlanetarySystemArgs::new(p, m))
+        .map(|(p, m)| PlaSysArgs::new(p, m))
         .collect();
 
     return planetary_systems;

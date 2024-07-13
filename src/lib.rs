@@ -23,11 +23,11 @@ impl Plugin for CorePlugin {
 pub enum AppState {
     #[default]
     Setup,
-    InMenu,
+    MainMenu,
     Loading,
-    InGame,
+    GamePlay,
 }
 
 pub fn complete_setup(mut app_state: ResMut<NextState<AppState>>) {
-    app_state.set(AppState::InMenu);
+    app_state.set(AppState::MainMenu);
 }

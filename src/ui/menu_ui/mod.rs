@@ -22,7 +22,7 @@ use online_game_menu::*;
 use settings_menu::*;
 
 #[derive(SubStates, Default, Debug, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
-#[source(AppState = AppState::InMenu)]
+#[source(AppState = AppState::MainMenu)]
 pub enum MenuState {
     #[default]
     MainMenu,
@@ -39,7 +39,7 @@ impl Plugin for MenuScenePlugin {
         app.add_sub_state::<MenuState>()
             .enable_state_scoped_entities::<MenuState>()
             .add_systems(
-                OnEnter(AppState::InMenu),
+                OnEnter(AppState::MainMenu),
                 spawn_menu_background.after(spawn_primary_camera),
             )
             .add_systems(OnEnter(MenuState::MainMenu), spawn_main_menu)
