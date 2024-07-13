@@ -8,6 +8,8 @@ mod online_game_menu;
 mod settings_menu;
 mod ui_builder_ext;
 
+use std::time::Duration;
+
 pub use crate::ui::camera::PrimaryCamera as UiCamera;
 pub use crate::ui::settings::UiSettings;
 
@@ -15,6 +17,7 @@ use super::spawn_primary_camera;
 use crate::AppState;
 use background::*;
 use bevy::prelude::*;
+use bevy::time::common_conditions::on_timer;
 use load_game_menu::*;
 use main_menu::*;
 use new_game_menu::*;
@@ -38,9 +41,12 @@ impl Plugin for MenuScenePlugin {
     fn build(&self, app: &mut App) {
         app.add_sub_state::<MenuState>()
             .enable_state_scoped_entities::<MenuState>()
+            .add_systems(OnEnter(AppState::InMenu), spawn_background)
             .add_systems(
-                OnEnter(AppState::InMenu),
-                spawn_menu_background.after(spawn_primary_camera),
+                Update,
+                update_background.run_if(
+                    on_timer(Duration::from_secs(10)).and_then(in_state(AppState::Loading)),
+                ),
             )
             .add_systems(OnEnter(MenuState::MainMenu), spawn_main_menu)
             .add_systems(OnEnter(MenuState::NewGame), spawn_new_game_menu)
