@@ -1,56 +1,99 @@
-use crate::ui::PrimaryCamera;
+use crate::ui::{menu_ui::ui_builder_ext::MenuUiBuilderExt0, PrimaryCamera};
 use bevy::prelude::*;
 use bevy_mod_picking::picking_core::Pickable;
 use sickle_ui::prelude::{generated::*, UiBuilderExt, UiRoot};
 
 /// A marker component for background image.
 #[derive(Component, Clone, Copy, Debug, Default)]
-pub struct MenuBackground(i64);
+pub struct MenuBackground;
 
-/// Spawn the background for the menu.
+/// A resource to store all background images.
+///
+/// This should exists for the entire [crate::AppState::InMenu]
+/// and [crate::AppState::Loading] to avoid additional resource
+/// loading time when displayed image are changed.
+#[derive(Resource, Clone, Debug, Default)]
+pub struct BackgroundImages {
+    id: usize,
+    images: Vec<Handle<Image>>,
+}
+
+impl BackgroundImages {
+    /// Create a new [BackgroundImages] from a collection of images.
+    fn new(images: Vec<Handle<Image>>) -> Self {
+        Self { id: 0, images }
+    }
+
+    /// Get the [Handle] of current background image.
+    fn image(&self) -> Handle<Image> {
+        self.images[self.id].clone()
+    }
+
+    /// Change to next image.
+    fn next(&mut self) {
+        self.id = (self.id + 1) % self.images.len();
+    }
+}
+
+/// Load all the background images for the menu.
+///
 /// # Schedule
 /// `OnEnter(AppState::MenuScene)`
+pub fn load_background(mut commands: Commands, asserts: Res<AssetServer>) {
+    let images = (0..2)
+        .into_iter()
+        .map(|i| asserts.load(format!("background/{}.png", i)))
+        .collect();
+
+    let resource = BackgroundImages::new(images);
+    commands.insert_resource(resource);
+}
+
+/// Spawn the background for the menu.
+///
+/// # Schedule
+/// Enter [crate::AppState::InMenu], need to have [BackgroundImages] resource.
 pub fn spawn_background(
     mut commands: Commands,
-    assets: Res<AssetServer>,
+    background: Res<BackgroundImages>,
     q_camera: Query<Entity, With<PrimaryCamera>>,
 ) {
-    const ASPECT_RATIO: f32 = 16.0 / 9.0;
-    let image = assets.load("background/background_0.png");
     let camera = q_camera.single();
 
     commands
         .ui_builder(UiRoot)
-        .spawn(ImageBundle {
-            image: UiImage {
-                color: Color::srgba(1.0, 1.0, 1.0, 0.5),
-                texture: image,
-                ..default()
-            },
+        .background_image(UiImage {
+            texture: background.image(),
             ..default()
         })
         .insert(TargetCamera(camera))
         .insert(Name::new("Menu Background"))
-        .insert(MenuBackground(0))
+        .insert(MenuBackground)
         .insert(Pickable::IGNORE)
         .style()
-        .align_self(AlignSelf::Center)
-        .justify_self(JustifySelf::Center)
-        .min_height(Val::Vh(100.0))
-        .max_height(Val::Vw(ASPECT_RATIO.recip() * 100.0))
-        .min_width(Val::Vw(100.0))
-        .max_width(Val::Vh(ASPECT_RATIO * 100.0))
-        .aspect_ratio(Some(ASPECT_RATIO))
         .z_index(ZIndex::Global(-64));
 }
 
+/// Update background image to next image. 
+/// 
+/// # Schedule
+/// In [crate::AppState::InMenu], need to have [BackgroundImages] resource.
 pub fn update_background(
-    assets: Res<AssetServer>,
-    mut q_background: Query<(&mut UiImage, &mut MenuBackground)>
+    mut background: ResMut<BackgroundImages>,
+    mut q_background: Query<&mut UiImage, With<MenuBackground>>,
 ) {
-    info!("update background!");
-    let (mut ui_image, mut background) = q_background.single_mut();
-    background.0 = (background.0 + 1) % 2;
-    let image = assets.load(format!("background/background_{}.png", background.0));
-    ui_image.texture = image;
+    background.next();
+    q_background.single_mut().texture = background.image();
+}
+
+/// Remove all background related components and resource.
+/// 
+/// # Schedule
+/// Exit [crate::AppState::Loading].
+pub fn clean_background(
+    mut commands: Commands,
+    mut q_background: Query<Entity, With<MenuBackground>>,
+) {
+    commands.remove_resource::<BackgroundImages>();
+    commands.entity(q_background.single_mut()).despawn();
 }

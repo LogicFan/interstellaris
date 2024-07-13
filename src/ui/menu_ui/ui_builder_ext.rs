@@ -113,8 +113,37 @@ pub trait MenuUiBuilderExt0: UiColumnExt + UiRowExt + UiContainerExt {
 
         builder
     }
+
+    fn spawn(&mut self, bundle: impl Bundle) -> UiBuilder<'_, Entity>;
+
+    fn background_image(&mut self, image: UiImage) -> UiBuilder<'_, Entity> {
+        let mut builder = self.spawn(ImageBundle { image, ..default() });
+
+        // the background image always has 16:9 aspect ratio.
+        const ASPECT_RATIO: f32 = 16.0 / 9.0;
+
+        builder
+            .style()
+            .align_self(AlignSelf::Center)
+            .justify_self(JustifySelf::Center)
+            .min_height(Val::Vh(100.0))
+            .max_height(Val::Vw(ASPECT_RATIO.recip() * 100.0))
+            .min_width(Val::Vw(100.0))
+            .max_width(Val::Vh(ASPECT_RATIO * 100.0))
+            .aspect_ratio(Some(ASPECT_RATIO));
+
+        builder
+    }
 }
 
-impl MenuUiBuilderExt0 for UiBuilder<'_, Entity> {}
+impl MenuUiBuilderExt0 for UiBuilder<'_, Entity> {
+    fn spawn(&mut self, bundle: impl Bundle) -> UiBuilder<'_, Entity> {
+        UiBuilder::<'_, Entity>::spawn(self, bundle)
+    }
+}
 
-impl MenuUiBuilderExt0 for UiBuilder<'_, UiRoot> {}
+impl MenuUiBuilderExt0 for UiBuilder<'_, UiRoot> {
+    fn spawn(&mut self, bundle: impl Bundle) -> UiBuilder<'_, Entity> {
+        UiBuilder::<'_, UiRoot>::spawn(self, bundle)
+    }
+}

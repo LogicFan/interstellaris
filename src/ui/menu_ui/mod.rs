@@ -13,7 +13,6 @@ use std::time::Duration;
 pub use crate::ui::camera::PrimaryCamera as UiCamera;
 pub use crate::ui::settings::UiSettings;
 
-use super::spawn_primary_camera;
 use crate::AppState;
 use background::*;
 use bevy::prelude::*;
@@ -41,7 +40,11 @@ impl Plugin for MenuScenePlugin {
     fn build(&self, app: &mut App) {
         app.add_sub_state::<MenuState>()
             .enable_state_scoped_entities::<MenuState>()
-            .add_systems(OnEnter(AppState::InMenu), spawn_background)
+            .add_systems(
+                OnEnter(AppState::InMenu),
+                (load_background, spawn_background).chain(),
+            )
+            .add_systems(OnExit(AppState::Loading), clean_background)
             .add_systems(
                 Update,
                 update_background.run_if(
