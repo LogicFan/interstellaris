@@ -6,7 +6,6 @@ use crate::game_map::gen::GenState;
 use crate::game_map::planetary_system::gen::PlnSysGenParams;
 use crate::game_map::planetary_system::PlanetarySystem;
 use crate::object_id::ObjectId;
-use crate::AppState;
 use bevy::math::FloatOrd;
 use bevy::prelude::*;
 use bevy::tasks::block_on;
@@ -14,11 +13,14 @@ use bevy::tasks::futures_lite::future;
 use bevy::tasks::AsyncComputeTaskPool;
 use bevy::tasks::Task;
 use rand_distr::num_traits::Float;
+use rand_distr::Beta;
 use rand_distr::Distribution;
-use rand_distr::Normal;
 use rand_distr::Uniform;
 use rand_pcg::Pcg64Mcg;
 use std::collections::BTreeMap;
+use voro_rs::container::Container2;
+use voro_rs::container_loop::ContainerLoop;
+use voro_rs::pre_container::PreContainer;
 
 /// Used for game map generation. This is the initial parameters for
 /// the galaxy random generation.
@@ -49,7 +51,7 @@ impl GalaxyGenParams {
     }
 
     fn height(&self) -> f32 {
-        8.0
+        32.0
     }
 
     fn delta(&self) -> f32 {
@@ -111,11 +113,12 @@ pub fn handle_galaxy_gen_task(
 
 fn new_planetary_systems(galaxy: GalaxyGenParams, mut rng: Pcg64Mcg) -> Vec<PlnSysGenParams> {
     let mut planetary_systems = Vec::with_capacity(galaxy.size);
-    random_positions(&mut planetary_systems, &galaxy, &mut rng);
+    assign_positions(&mut planetary_systems, &galaxy, &mut rng);
+    assign_masses(&mut planetary_systems, &galaxy);
     planetary_systems
 }
 
-fn random_positions(
+fn assign_positions(
     planetary_systems: &mut Vec<PlnSysGenParams>,
     galaxy: &GalaxyGenParams,
     rng: &mut Pcg64Mcg,
@@ -123,16 +126,24 @@ fn random_positions(
     let mut x_range = BTreeMap::<FloatOrd, Vec3>::new();
 
     let radius_distr = Uniform::new_inclusive(-galaxy.radius(), galaxy.radius());
-    let height_distr = Normal::new(0.0, 1.0).unwrap();
+    let height_distr = {
+        let s = 0.1;
+        let alpha = 0.5.powi(3) / s.powi(2);
+        let beta = alpha;
+
+        info!("alpha = {}, beta = {}", alpha, beta);
+
+        Beta::new(alpha, beta)
+            .unwrap()
+            .map(|x| (x - 0.5) * 2.0 * galaxy.height())
+    };
 
     // double the number of iterations to compensate for potential
     // rejected position.
     'outer: for _ in 0..(galaxy.size * 2) {
         let x = radius_distr.sample(rng);
         let y = radius_distr.sample(rng);
-        let z = height_distr
-            .sample(rng)
-            .clamp(-galaxy.height(), galaxy.height());
+        let z = height_distr.sample(rng);
         let candidate = Vec3::new(x, y, z);
 
         // reject this value if it is to close to a existing one.
@@ -159,4 +170,58 @@ fn random_positions(
             mass: -1.0,
         });
     });
+}
+
+fn assign_masses(planetary_systems: &mut Vec<PlnSysGenParams>, galaxy: &GalaxyGenParams) {
+    let xyz_min = [
+        -galaxy.radius() as f64,
+        -galaxy.radius() as f64,
+        -galaxy.height() as f64,
+    ];
+    let xyz_max = [
+        galaxy.radius() as f64,
+        galaxy.radius() as f64,
+        galaxy.height() as f64,
+    ];
+
+    let mut pc =
+        voro_rs::pre_container::PreContainerStd::new(xyz_min, xyz_max, [false, false, false]);
+
+    for (i, pln_sys) in planetary_systems.iter_mut().enumerate() {
+        pc.put(
+            i as i32,
+            [
+                pln_sys.position.x as f64,
+                pln_sys.position.y as f64,
+                pln_sys.position.z as f64,
+            ],
+            0.0,
+        );
+    }
+    let grids = pc.optimal_grids();
+
+    let mut co =
+        voro_rs::container::ContainerStd::new(xyz_min, xyz_max, grids, [false, false, false]);
+    pc.setup(&mut co);
+
+    let mut lo = voro_rs::container_loop::LoopAll::of_container_std(&mut co);
+    lo.start();
+
+    loop {
+        let cell: Option<voro_rs::cell::VoroCellSgl> = co.compute_cell(&mut lo);
+
+        use voro_rs::cell::VoroCell;
+
+        match cell {
+            Some(mut c) => {
+                planetary_systems[lo.particle_id() as usize].mass =
+                    c.volume().powf(1.0 / 3.0) as f32;
+            }
+            _ => (),
+        }
+
+        if !lo.inc() {
+            break;
+        }
+    }
 }

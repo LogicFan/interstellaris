@@ -1,4 +1,7 @@
-use super::galaxy::gen::{handle_galaxy_gen_task, init_galaxy_gen_task};
+use super::{
+    galaxy::gen::{handle_galaxy_gen_task, init_galaxy_gen_task},
+    planetary_system::gen::spawn_planetary_systems,
+};
 use crate::{states::LoadSource, AppState};
 use bevy::prelude::*;
 use rand::{thread_rng, RngCore};
@@ -22,7 +25,8 @@ impl Plugin for GampMapGenPlugin {
             .add_systems(
                 Update,
                 handle_galaxy_gen_task.run_if(in_state(GenState::InitGalaxy)),
-            );
+            )
+            .add_systems(OnEnter(GenState::InitPlnSys), spawn_planetary_systems);
     }
 }
 

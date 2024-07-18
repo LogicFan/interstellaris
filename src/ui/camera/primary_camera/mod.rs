@@ -76,7 +76,7 @@ pub fn spawn_primary_camera(mut commands: Commands) {
     let camera = commands
         .spawn((
             Camera3dBundle {
-                transform: Transform::from_xyz(0.0, 0.0, 100.0),
+                transform: Transform::from_xyz(0.0, 0.0, 50.0),
                 ..default()
             },
             PrimaryCamera,
