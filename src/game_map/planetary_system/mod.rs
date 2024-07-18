@@ -1,3 +1,5 @@
+pub mod gen;
+
 use crate::object_id::{ObjectId, ObjectRef};
 use bevy::prelude::*;
 

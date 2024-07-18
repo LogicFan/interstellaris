@@ -1,6 +1,6 @@
-mod gen;
-
-pub use gen::*;
+pub mod gen;
+pub mod galaxy;
+pub mod planetary_system;
 
 use crate::object_id::ObjectRef;
 use bevy::prelude::Component;

@@ -1,5 +1,8 @@
 use super::{ui_builder_ext::MenuUiBuilderExt0, MenuState, UiCamera, UiSettings};
-use crate::{game_map::GameMapGenArgs, ui::menu_ui::AppState};
+use crate::{
+    game_map::galaxy::{gen::GalaxyGenParams, Galaxy},
+    ui::menu_ui::AppState,
+};
 use bevy::prelude::*;
 use sickle_ui::prelude::*;
 
@@ -35,5 +38,6 @@ pub fn spawn_new_game_menu(
 
 fn confirm_button_handler(mut commands: Commands, mut app_state: ResMut<NextState<AppState>>) {
     app_state.set(AppState::Loading);
-    commands.spawn(GameMapGenArgs::default());
+    // entity for galaxy generation
+    commands.spawn((Galaxy, GalaxyGenParams::default()));
 }
