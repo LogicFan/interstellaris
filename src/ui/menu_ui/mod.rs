@@ -10,6 +10,7 @@ mod ui_builder_ext;
 
 use std::time::Duration;
 
+use crate::states::AppStateLoading;
 pub use crate::ui::camera::PrimaryCamera as UiCamera;
 pub use crate::ui::settings::UiSettings;
 
@@ -48,12 +49,11 @@ impl Plugin for MenuScenePlugin {
                 OnEnter(AppState::InMenu),
                 (load_background, spawn_background).chain(),
             )
-            .add_systems(OnExit(AppState::Loading), clean_background)
+            .add_systems(OnExit(AppStateLoading), clean_background)
             .add_systems(
                 Update,
-                update_background.run_if(
-                    on_timer(Duration::from_secs(10)).and_then(in_state(AppState::Loading)),
-                ),
+                update_background
+                    .run_if(on_timer(Duration::from_secs(10)).and_then(in_state(AppStateLoading))),
             )
             .add_systems(OnEnter(MenuState::MainPage), spawn_main_menu)
             .add_systems(OnEnter(MenuState::NewGamePage), spawn_new_game_menu)

@@ -2,9 +2,9 @@ use bevy::prelude::*;
 // use bevy_editor_pls::prelude::*;
 use bevy_mod_picking::DefaultPickingPlugins;
 use sickle_ui::SickleUiPlugin;
+use stellaris::game_map::gen::GampMapGenPlugin;
 use stellaris::ui::*;
 use stellaris::*;
-use stellaris::game_map::gen::GampMapGenPlugin;
 
 fn main() {
     let mut app = App::new();

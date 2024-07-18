@@ -74,8 +74,8 @@ pub fn spawn_background(
         .z_index(ZIndex::Global(-64));
 }
 
-/// Update background image to next image. 
-/// 
+/// Update background image to next image.
+///
 /// # Schedule
 /// In [crate::AppState::InMenu], need to have [BackgroundImages] resource.
 pub fn update_background(
@@ -87,7 +87,7 @@ pub fn update_background(
 }
 
 /// Remove all background related components and resource.
-/// 
+///
 /// # Schedule
 /// Exit [crate::AppState::Loading].
 pub fn clean_background(

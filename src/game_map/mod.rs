@@ -1,5 +1,5 @@
-pub mod gen;
 pub mod galaxy;
+pub mod gen;
 pub mod planetary_system;
 
 use crate::object_id::ObjectRef;
