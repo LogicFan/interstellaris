@@ -1,11 +1,11 @@
 //! a module for the start menu.
 
 mod background;
-mod load_game_menu;
-mod main_menu;
-mod new_game_menu;
-mod online_game_menu;
-mod settings_menu;
+mod load_game_page;
+mod main_page;
+mod new_game_page;
+mod online_game_page;
+mod settings_page;
 mod ui_builder_ext;
 
 use std::time::Duration;
@@ -17,11 +17,11 @@ use crate::AppState;
 use background::*;
 use bevy::prelude::*;
 use bevy::time::common_conditions::on_timer;
-use load_game_menu::*;
-use main_menu::*;
-use new_game_menu::*;
-use online_game_menu::*;
-use settings_menu::*;
+use load_game_page::*;
+use main_page::*;
+use new_game_page::*;
+use online_game_page::*;
+use settings_page::*;
 
 #[derive(SubStates, Default, Debug, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
 #[source(AppState = AppState::InMenu)]
