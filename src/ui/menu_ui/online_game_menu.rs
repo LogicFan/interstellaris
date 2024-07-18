@@ -38,5 +38,5 @@ pub fn spawn_online_menu(
         .insert(TargetCamera(camera))
         .insert(OnlineMenu)
         .insert(Name::new("Online Game Menu"))
-        .insert(StateScoped(MenuState::OnlineGame));
+        .insert(StateScoped(MenuState::OnlineGamePage));
 }

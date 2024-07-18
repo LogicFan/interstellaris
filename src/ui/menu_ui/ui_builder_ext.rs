@@ -1,4 +1,4 @@
-use super::{MenuState, UiSettings};
+use super::{MenuState, PrevPageStack, UiSettings};
 use bevy::prelude::*;
 use bevy_mod_picking::prelude::{Click, On, Out, Over, Pickable, Pointer};
 use sickle_ui::{
@@ -91,8 +91,11 @@ pub trait MenuUiBuilderExt0: UiColumnExt + UiRowExt + UiContainerExt {
                 .row(|row| {
                     row.medium_text_button(settings, "Back")
                         .insert(On::<Pointer<Click>>::run(
-                            |mut state: ResMut<NextState<MenuState>>| {
-                                state.set(MenuState::MainMenu)
+                            |mut state: ResMut<NextState<MenuState>>,
+                             mut stack: ResMut<PrevPageStack>| {
+                                if let Some(prev_page) = stack.0.pop() {
+                                    state.set(prev_page)
+                                }
                             },
                         ));
 

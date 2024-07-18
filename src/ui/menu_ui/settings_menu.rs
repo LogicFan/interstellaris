@@ -38,5 +38,5 @@ pub fn spawn_settings_menu(
         .insert(TargetCamera(camera))
         .insert(SettingsMenu)
         .insert(Name::new("Settings Menu"))
-        .insert(StateScoped(MenuState::Settings));
+        .insert(StateScoped(MenuState::SettingsPage));
 }

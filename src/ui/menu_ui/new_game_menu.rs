@@ -33,7 +33,7 @@ pub fn spawn_new_game_menu(
         })
         .insert(TargetCamera(camera))
         .insert(Name::new("New Game Menu"))
-        .insert(StateScoped(MenuState::NewGame));
+        .insert(StateScoped(MenuState::NewGamePage));
 }
 
 fn confirm_button_handler(mut commands: Commands, mut app_state: ResMut<NextState<AppState>>) {

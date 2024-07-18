@@ -27,12 +27,15 @@ use settings_menu::*;
 #[source(AppState = AppState::InMenu)]
 pub enum MenuState {
     #[default]
-    MainMenu,
-    NewGame,
-    LoadGame,
-    Settings,
-    OnlineGame,
+    MainPage,
+    NewGamePage,
+    LoadGamePage,
+    SettingsPage,
+    OnlineGamePage,
 }
+
+#[derive(Resource, Default, Clone)]
+pub struct PrevPageStack(Vec<MenuState>);
 
 pub struct MenuScenePlugin;
 
@@ -40,6 +43,7 @@ impl Plugin for MenuScenePlugin {
     fn build(&self, app: &mut App) {
         app.add_sub_state::<MenuState>()
             .enable_state_scoped_entities::<MenuState>()
+            .insert_resource(PrevPageStack::default())
             .add_systems(
                 OnEnter(AppState::InMenu),
                 (load_background, spawn_background).chain(),
@@ -51,12 +55,10 @@ impl Plugin for MenuScenePlugin {
                     on_timer(Duration::from_secs(10)).and_then(in_state(AppState::Loading)),
                 ),
             )
-            .add_systems(OnEnter(MenuState::MainMenu), spawn_main_menu)
-            .add_systems(OnEnter(MenuState::NewGame), spawn_new_game_menu)
-            .add_systems(OnEnter(MenuState::LoadGame), spawn_load_game_menu)
-            // online menu
-            .add_systems(OnEnter(MenuState::OnlineGame), spawn_online_menu)
-            // settings menu
-            .add_systems(OnEnter(MenuState::Settings), spawn_settings_menu);
+            .add_systems(OnEnter(MenuState::MainPage), spawn_main_menu)
+            .add_systems(OnEnter(MenuState::NewGamePage), spawn_new_game_menu)
+            .add_systems(OnEnter(MenuState::LoadGamePage), spawn_load_game_menu)
+            .add_systems(OnEnter(MenuState::OnlineGamePage), spawn_online_menu)
+            .add_systems(OnEnter(MenuState::SettingsPage), spawn_settings_menu);
     }
 }

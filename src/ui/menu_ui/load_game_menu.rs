@@ -34,5 +34,5 @@ pub fn spawn_load_game_menu(
         )
         .insert(TargetCamera(camera))
         .insert(Name::new("Load Game Menu"))
-        .insert(StateScoped(MenuState::LoadGame));
+        .insert(StateScoped(MenuState::LoadGamePage));
 }
