@@ -1,23 +1,28 @@
+use super::galaxy::gen::{handle_galaxy_gen_task, init_galaxy_gen_task};
 use crate::{states::LoadSource, AppState};
 use bevy::prelude::*;
 use rand::{thread_rng, RngCore};
 use rand_pcg::Pcg64Mcg;
 
-use super::galaxy::gen::{handle_galaxy_gen_task, init_galaxy_gen_task};
+#[derive(SubStates, Default, Debug, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
+#[source(AppState = AppState::Loading(LoadSource::Generation))]
+pub enum GenState {
+    #[default]
+    InitGalaxy,
+    InitPlnSys,
+}
 
 /// The plugin for game map generation.
 pub struct GampMapGenPlugin;
 
 impl Plugin for GampMapGenPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(
-            OnEnter(AppState::Loading(LoadSource::Generation)),
-            init_galaxy_gen_task,
-        )
-        .add_systems(
-            Update,
-            handle_galaxy_gen_task.run_if(in_state(AppState::Loading(LoadSource::Generation))),
-        );
+        app.add_sub_state::<GenState>()
+            .add_systems(OnEnter(GenState::InitGalaxy), init_galaxy_gen_task)
+            .add_systems(
+                Update,
+                handle_galaxy_gen_task.run_if(in_state(GenState::InitGalaxy)),
+            );
     }
 }
 

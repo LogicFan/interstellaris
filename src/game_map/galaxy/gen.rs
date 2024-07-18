@@ -2,6 +2,7 @@ use super::Galaxy;
 use super::GalaxySize;
 use crate::game_map::gen::default_rng;
 use crate::game_map::gen::GenRng;
+use crate::game_map::gen::GenState;
 use crate::game_map::planetary_system::gen::PlnSysGenParams;
 use crate::game_map::planetary_system::PlanetarySystem;
 use crate::object_id::ObjectId;
@@ -76,7 +77,7 @@ pub fn init_galaxy_gen_task(
 
 pub fn handle_galaxy_gen_task(
     mut commands: Commands,
-    mut app_state: ResMut<NextState<AppState>>,
+    mut gen_state: ResMut<NextState<GenState>>,
     mut q_galaxy: Query<(Entity, &mut GenTask, &GalaxyGenParams), With<Galaxy>>,
 ) {
     let mut count = 0;
@@ -104,7 +105,7 @@ pub fn handle_galaxy_gen_task(
     }
 
     if count == 0 {
-        app_state.set(AppState::InGame)
+        gen_state.set(GenState::InitPlnSys)
     }
 }
 

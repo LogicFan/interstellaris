@@ -36,6 +36,9 @@ impl ComputedStates for AppStateLoading {
     }
 }
 
+/// Move the state from [AppState::Setup] to [AppState::InMenu].
+/// This is scheduled to run at [PostStartup], therefore all setup
+/// code must be completed before it.
 pub fn complete_setup(mut app_state: ResMut<NextState<AppState>>) {
     app_state.set(AppState::InMenu);
 }

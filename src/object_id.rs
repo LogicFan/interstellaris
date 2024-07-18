@@ -16,6 +16,9 @@ impl Default for ObjectId {
 /// game objects.
 #[derive(Debug, Clone, Copy)]
 pub struct ObjectRef {
+    /// The stable id for the game object
     pub id: ObjectId,
+    /// The id used by bevy internally. It will change
+    /// at each run.
     pub entity: Entity,
 }
