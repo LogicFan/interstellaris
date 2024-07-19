@@ -1,11 +1,10 @@
 use super::Galaxy;
 use super::GalaxySize;
-use crate::game_map::gen::default_rng;
 use crate::game_map::gen::GenState;
-use crate::game_map::gen::RngExt;
 use crate::game_map::planetary_system::gen::PlnSysGenParams;
 use crate::game_map::planetary_system::PlanetarySystem;
-use crate::utils::object_id::ObjectId;
+use crate::utils::ObjectId;
+use crate::utils::{default_rng, RngExt};
 use bevy::math::FloatOrd;
 use bevy::prelude::*;
 use bevy::tasks::block_on;

@@ -1,6 +1,6 @@
 pub mod gen;
 
-use crate::utils::object_id::{ObjectId, ObjectRef};
+use crate::utils::{ObjectId, ObjectRef};
 use bevy::prelude::*;
 
 #[derive(Component, Copy, Clone, Default, Debug)]
