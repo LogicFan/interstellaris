@@ -1,4 +1,4 @@
-//! a module for the start menu.
+//! The menu UI.
 
 mod background;
 mod load_game_page;
@@ -8,12 +8,10 @@ mod online_game_page;
 mod settings_page;
 mod ui_builder_ext;
 
-use std::time::Duration;
-
-use crate::states::AppStateLoading;
 pub use crate::ui::camera::PrimaryCamera as UiCamera;
 pub use crate::ui::settings::UiSettings;
 
+use crate::states::AppStateLoading;
 use crate::AppState;
 use background::*;
 use bevy::prelude::*;
@@ -23,7 +21,9 @@ use main_page::*;
 use new_game_page::*;
 use online_game_page::*;
 use settings_page::*;
+use std::time::Duration;
 
+/// The sub-state for menu page management.
 #[derive(SubStates, Default, Debug, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
 #[source(AppState = AppState::InMenu)]
 pub enum MenuState {
@@ -35,12 +35,15 @@ pub enum MenuState {
     OnlineGamePage,
 }
 
+/// A resource to keep track which page (i.e. state) we should
+/// return to.
 #[derive(Resource, Default, Clone)]
 pub struct PrevPageStack(Vec<MenuState>);
 
-pub struct MenuScenePlugin;
+/// the plugin for setup and manage menu.
+pub struct InMenuPlugin;
 
-impl Plugin for MenuScenePlugin {
+impl Plugin for InMenuPlugin {
     fn build(&self, app: &mut App) {
         app.add_sub_state::<MenuState>()
             .enable_state_scoped_entities::<MenuState>()

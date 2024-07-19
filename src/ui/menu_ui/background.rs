@@ -1,3 +1,6 @@
+//! The background image for [crate::AppState::InMenu] and 
+//! [crate::AppState::Loading]
+
 use crate::ui::{menu_ui::ui_builder_ext::MenuUiBuilderExt0, PrimaryCamera};
 use bevy::prelude::*;
 use bevy_mod_picking::picking_core::Pickable;
@@ -38,7 +41,7 @@ impl BackgroundImages {
 /// Load all the background images for the menu.
 ///
 /// # Schedule
-/// `OnEnter(AppState::MenuScene)`
+/// Enter [crate::AppState::InMenu]
 pub fn load_background(mut commands: Commands, asserts: Res<AssetServer>) {
     let images = (0..2)
         .into_iter()

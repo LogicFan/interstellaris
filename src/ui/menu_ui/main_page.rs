@@ -1,3 +1,5 @@
+//! Main page of the menu.
+
 use super::ui_builder_ext::*;
 use super::MenuState;
 use super::PrevPageStack;
@@ -10,7 +12,7 @@ use sickle_ui::prelude::{generated::*, UiBuilderExt, UiColumnExt, UiRoot};
 /// Spawn the UI for main menu.
 ///
 /// # Schedule
-/// Enter [super::MenuState::MainMenu]
+/// Enter [super::MenuState::MainPage]
 pub fn spawn_main_menu(
     mut commands: Commands,
     q_camera: Query<Entity, With<UiCamera>>,

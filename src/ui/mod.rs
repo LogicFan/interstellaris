@@ -1,3 +1,5 @@
+//! UI-related codes, including menu UI, game UI and camera setup.
+
 pub mod camera;
 mod cursor;
 mod menu_ui;
@@ -15,7 +17,7 @@ pub struct UserInterfacePlugin;
 impl Plugin for UserInterfacePlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins(settings::SettingsPlugin)
-            .add_plugins(menu_ui::MenuScenePlugin)
+            .add_plugins(menu_ui::InMenuPlugin)
             .insert_resource(camera::MotionMode::NoMotion)
             .add_systems(Startup, camera::spawn_primary_camera)
             .add_systems(
