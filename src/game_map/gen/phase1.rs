@@ -55,7 +55,7 @@ pub fn init_galaxy(
     };
 }
 
-#[derive(Component, Debug, Default, Clone, Copy)]
+#[derive(Component, Copy, Clone, Default, Debug)]
 pub struct PlaSysArgs {
     position: Vec3,
     mass: f32,

@@ -3,13 +3,13 @@ pub mod gen;
 use crate::utils::object_id::{ObjectId, ObjectRef};
 use bevy::prelude::*;
 
-#[derive(Debug, Default, Clone, Copy, Component)]
+#[derive(Component, Copy, Clone, Default, Debug)]
 pub struct PlanetarySystem;
 
-#[derive(Debug, Default, Clone, Component)]
+#[derive(Component, Clone, Default, Debug)]
 pub struct Planets(pub Vec<ObjectRef>);
 
-#[derive(Debug, Default, Clone, Bundle)]
+#[derive(Clone, Default, Debug, Bundle)]
 pub struct PlanetarySystemBundle {
     pub marker: PlanetarySystem,
     pub id: ObjectId,
@@ -17,7 +17,7 @@ pub struct PlanetarySystemBundle {
     pub planets: Planets,
 }
 
-#[derive(Debug, Default, Bundle, Clone)]
+#[derive(Clone, Default, Debug, Bundle)]
 pub struct VPlanetarySystemBundle {
     pub mesh: Handle<Mesh>,
     pub material: Handle<StandardMaterial>,

@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-#[derive(Debug, Clone, Copy, Resource)]
+#[derive(Resource, Copy, Clone, Debug)]
 pub struct InputSettings {
     pub mouse_motion_sensitivity: f32,
     pub mouse_scroll_sensitivity: f32,

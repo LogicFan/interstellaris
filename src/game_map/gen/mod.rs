@@ -7,7 +7,7 @@ use bevy::prelude::*;
 use rand::{thread_rng, RngCore};
 use rand_pcg::Pcg64Mcg;
 
-#[derive(SubStates, Default, Debug, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(SubStates, Copy, Clone, Default, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[source(AppState = AppState::Loading(LoadSource::Generation))]
 pub enum GenState {
     #[default]

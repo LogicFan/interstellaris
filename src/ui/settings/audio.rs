@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-#[derive(Debug, Clone, Copy, Resource)]
+#[derive(Resource, Copy, Clone, Debug)]
 pub struct AudioSettings {}
 
 impl Default for AudioSettings {

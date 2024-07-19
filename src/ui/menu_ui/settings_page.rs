@@ -2,7 +2,7 @@ use super::{ui_builder_ext::MenuUiBuilderExt0, MenuState, UiCamera, UiSettings};
 use bevy::prelude::*;
 use sickle_ui::prelude::*;
 
-#[derive(Component, Clone, Copy, Debug, Default)]
+#[derive(Component, Copy, Clone, Default, Debug)]
 pub struct SettingsMenu;
 
 pub fn spawn_settings_menu(

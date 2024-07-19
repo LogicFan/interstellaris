@@ -12,7 +12,7 @@ use bevy_mod_picking::PickableBundle;
 use rand_pcg::Pcg64Mcg;
 use std::f32::consts::PI;
 
-#[derive(Component, Debug, Clone)]
+#[derive(Component, Clone, Debug)]
 pub struct PlnSysGenParams {
     pub rng: Pcg64Mcg,
     pub position: Vec3,

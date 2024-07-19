@@ -7,7 +7,7 @@ use bevy_mod_picking::picking_core::Pickable;
 use sickle_ui::prelude::{generated::*, UiBuilderExt, UiRoot};
 
 /// A marker component for background image.
-#[derive(Component, Clone, Copy, Debug, Default)]
+#[derive(Component, Copy, Clone, Default, Debug)]
 pub struct MenuBackground;
 
 /// A resource to store all background images.
@@ -15,7 +15,7 @@ pub struct MenuBackground;
 /// This should exists for the entire [crate::AppState::InMenu]
 /// and [crate::AppState::Loading] to avoid additional resource
 /// loading time when displayed image are changed.
-#[derive(Resource, Clone, Debug, Default)]
+#[derive(Resource, Clone, Default, Debug)]
 pub struct BackgroundImages {
     id: usize,
     images: Vec<Handle<Image>>,

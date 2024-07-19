@@ -3,7 +3,7 @@
 use bevy::prelude::*;
 
 /// The high-level state of the app
-#[derive(States, Default, Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(States, Copy, Clone, Default, Debug, PartialEq, Eq, Hash)]
 pub enum AppState {
     #[default]
     Setup,
@@ -13,7 +13,7 @@ pub enum AppState {
 }
 
 /// An enum to indicate what type of loading we need to do.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq, Hash)]
 pub enum LoadSource {
     /// Generate a new map from seed and user configuration.
     Generation,
@@ -24,7 +24,7 @@ pub enum LoadSource {
 }
 
 /// A computed state of any possible [AppState::Loading].
-#[derive(Clone, PartialEq, Eq, Hash, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct AppStateLoading;
 
 impl ComputedStates for AppStateLoading {

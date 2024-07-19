@@ -41,16 +41,16 @@ pub use crate::ui::settings::InputSettings;
 pub use free_motion::*;
 
 /// The marker component of primary camera.
-#[derive(Component, Clone, Copy, Debug, Default)]
+#[derive(Component, Copy, Clone, Default, Debug)]
 pub struct PrimaryCamera;
 
 /// The marker component of the parent of the primary camera. Should always
 /// at z=0 plane in free motion mode.
-#[derive(Component, Clone, Copy, Debug, Default)]
+#[derive(Component, Copy, Clone, Default, Debug)]
 pub struct CameraOrigin;
 
 /// describe the motion mode of the camera
-#[derive(Resource, Clone, Copy, Debug)]
+#[derive(Resource, Copy, Clone, Debug)]
 pub enum MotionMode {
     NoMotion,
     FreeMotion {

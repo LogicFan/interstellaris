@@ -24,7 +24,7 @@ use settings_page::*;
 use std::time::Duration;
 
 /// The sub-state for menu page management.
-#[derive(SubStates, Default, Debug, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(SubStates, Copy, Clone, Default, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[source(AppState = AppState::InMenu)]
 pub enum MenuState {
     #[default]
@@ -37,7 +37,7 @@ pub enum MenuState {
 
 /// A resource to keep track which page (i.e. state) we should
 /// return to.
-#[derive(Resource, Default, Clone)]
+#[derive(Resource, Clone, Default)]
 pub struct PrevPageStack(Vec<MenuState>);
 
 /// the plugin for setup and manage menu.

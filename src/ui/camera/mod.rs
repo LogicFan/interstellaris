@@ -6,7 +6,7 @@ use bevy::prelude::*;
 
 pub use primary_camera::*;
 
-#[derive(SystemSet, Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, SystemSet)]
 pub enum CameraMotionSystemSet {
     PrimaryCamera,
 }

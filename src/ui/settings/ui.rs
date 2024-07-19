@@ -1,6 +1,6 @@
 use bevy::{color::palettes::tailwind, prelude::*};
 
-#[derive(Debug, Clone, Resource)]
+#[derive(Resource, Clone, Debug)]
 pub struct UiSettings {
     /// 1.0 is the normal size
     pub ui_scale: f32,

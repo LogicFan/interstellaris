@@ -24,7 +24,7 @@ use voro_rs::pre_container::PreContainer;
 
 /// Used for game map generation. This is the initial parameters for
 /// the galaxy random generation.
-#[derive(Component, Debug, Clone)]
+#[derive(Component, Clone, Debug)]
 pub struct GalaxyGenParams {
     /// the random generator for this galaxy.
     pub rng: Pcg64Mcg,

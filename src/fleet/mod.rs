@@ -2,16 +2,16 @@ use crate::game_map::Coordinate;
 use crate::utils::object_id::*;
 use bevy::prelude::*;
 
-#[derive(Debug, Clone, Copy, Component)]
+#[derive(Component, Copy, Clone, Debug)]
 pub struct Fleet;
 
-#[derive(Debug, Clone, Copy, Component)]
+#[derive(Component, Copy, Clone, Debug)]
 pub struct Owner(pub ObjectRef);
 
-#[derive(Debug, Clone, Component)]
+#[derive(Component, Clone, Debug)]
 pub struct Vessels(pub Vec<ObjectRef>);
 
-#[derive(Debug, Clone, Bundle)]
+#[derive(Clone, Debug, Bundle)]
 pub struct LFleet {
     pub marker: Fleet,
     pub id: ObjectId,
@@ -21,7 +21,7 @@ pub struct LFleet {
     pub coordinate: Coordinate,
 }
 
-#[derive(Bundle, Clone)]
+#[derive(Clone, Bundle)]
 pub struct VFleet {
     pub mesh: Handle<Mesh>,
     pub material: Handle<StandardMaterial>,
