@@ -29,12 +29,27 @@ pub fn spawn_planetary_systems(
     mut cam_mo: ResMut<MotionMode>,
 ) {
     let mesh = asset.add(Sphere::default().mesh().ico(16).unwrap());
-    let material = asset.add(StandardMaterial {
-        emissive: LinearRgba::new(1000.0, 500.0, 500.0, 1.0),
-        ..default()
-    });
+
+    let min_mass = q_pln_sys
+        .iter()
+        .min_by(|x, y| x.mass.total_cmp(&y.mass))
+        .unwrap()
+        .mass;
+    let max_mass = q_pln_sys
+        .iter()
+        .max_by(|x, y| x.mass.total_cmp(&y.mass))
+        .unwrap()
+        .mass;
 
     for planetary_system in q_pln_sys.iter() {
+        let r = (planetary_system.mass - min_mass) / (max_mass - min_mass);
+        let g = 1.0 - r;
+
+        let material = asset.add(StandardMaterial {
+            emissive: LinearRgba::new(r, g, 0.0, 1.0),
+            ..default()
+        });
+
         commands.spawn((
             PlanetarySystemBundle {
                 transform: Transform::from_translation(planetary_system.position)

@@ -1,3 +1,5 @@
+//! The overall state management of the game.
+
 use bevy::prelude::*;
 
 /// The high-level state of the app

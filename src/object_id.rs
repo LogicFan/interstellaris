@@ -1,7 +1,9 @@
+//! Id for game objects.
+
 use bevy::prelude::{Component, Entity};
 use uuid::Uuid;
 
-/// A unique id for all objects in the game
+/// A stable unique id for all objects in the game
 #[derive(Debug, Clone, Copy, Component)]
 pub struct ObjectId(pub Uuid);
 

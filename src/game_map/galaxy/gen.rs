@@ -131,8 +131,6 @@ fn assign_positions(
         let alpha = 0.5.powi(3) / s.powi(2);
         let beta = alpha;
 
-        info!("alpha = {}, beta = {}", alpha, beta);
-
         Beta::new(alpha, beta)
             .unwrap()
             .map(|x| (x - 0.5) * 2.0 * galaxy.height())
@@ -214,6 +212,7 @@ fn assign_masses(planetary_systems: &mut Vec<PlnSysGenParams>, galaxy: &GalaxyGe
 
         match cell {
             Some(mut c) => {
+                // TODO: change volume computation
                 planetary_systems[lo.particle_id() as usize].mass =
                     c.volume().powf(1.0 / 3.0) as f32;
             }
