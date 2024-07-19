@@ -1,10 +1,11 @@
 //! Id for game objects.
 
 use bevy::prelude::{Component, Entity};
+use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 /// A stable unique id for all objects in the game
-#[derive(Component, Copy, Clone, Debug)]
+#[derive(Component, Copy, Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct ObjectId(pub Uuid);
 
 impl Default for ObjectId {
@@ -23,4 +24,26 @@ pub struct ObjectRef {
     /// The id used by bevy internally. It will change
     /// at each run.
     pub entity: Entity,
+}
+
+impl Serialize for ObjectRef {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        self.id.serialize(serializer)
+    }
+}
+
+impl<'de> Deserialize<'de> for ObjectRef {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let id = ObjectId::deserialize(deserializer)?;
+        Ok(Self {
+            id,
+            entity: Entity::PLACEHOLDER,
+        })
+    }
 }

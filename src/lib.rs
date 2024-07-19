@@ -2,9 +2,9 @@
 
 pub mod fleet;
 pub mod game_map;
-pub mod utils;
 pub mod states;
 pub mod ui;
+pub mod utils;
 
 use bevy::prelude::*;
 use states::{complete_setup, AppState, AppStateLoading};
