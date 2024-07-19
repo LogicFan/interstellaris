@@ -4,7 +4,7 @@ use bevy::prelude::{Component, Entity};
 use uuid::Uuid;
 
 /// A stable unique id for all objects in the game
-#[derive(Debug, Clone, Copy, Component)]
+#[derive(Component, Debug, Clone, Copy)]
 pub struct ObjectId(pub Uuid);
 
 impl Default for ObjectId {

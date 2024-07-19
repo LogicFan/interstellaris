@@ -2,7 +2,7 @@ pub mod galaxy;
 pub mod gen;
 pub mod planetary_system;
 
-use crate::object_id::ObjectRef;
+use crate::utils::object_id::ObjectRef;
 use bevy::prelude::Component;
 
 /// Determine which coordinate system the entity is using. If it's None, then

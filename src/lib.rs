@@ -2,7 +2,7 @@
 
 pub mod fleet;
 pub mod game_map;
-pub mod object_id;
+pub mod utils;
 pub mod states;
 pub mod ui;
 

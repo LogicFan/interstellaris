@@ -1,5 +1,5 @@
 use crate::game_map::Coordinate;
-use crate::object_id::*;
+use crate::utils::object_id::*;
 use bevy::prelude::*;
 
 #[derive(Debug, Clone, Copy, Component)]

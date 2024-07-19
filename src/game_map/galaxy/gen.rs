@@ -1,11 +1,11 @@
 use super::Galaxy;
 use super::GalaxySize;
 use crate::game_map::gen::default_rng;
-use crate::game_map::gen::GenRng;
+use crate::game_map::gen::RngExt;
 use crate::game_map::gen::GenState;
 use crate::game_map::planetary_system::gen::PlnSysGenParams;
 use crate::game_map::planetary_system::PlanetarySystem;
-use crate::object_id::ObjectId;
+use crate::utils::object_id::ObjectId;
 use bevy::math::FloatOrd;
 use bevy::prelude::*;
 use bevy::tasks::block_on;
@@ -162,8 +162,10 @@ fn assign_positions(
     }
 
     x_range.values().enumerate().for_each(|(i, position)| {
+        let mut rng = galaxy.rng.clone();
+        rng.advance32(i);
         planetary_systems.push(PlnSysGenParams {
-            rng: galaxy.rng.pln_sys_rng(i),
+            rng,
             position: *position,
             mass: -1.0,
         });

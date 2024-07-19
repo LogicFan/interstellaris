@@ -38,42 +38,35 @@ impl Plugin for GampMapGenPlugin {
 /// Within this range, the first 2^32 numbers will be used for galaxy
 /// itself, and the following will be used for planetary systems.
 /// - for each planetary system, it will use 2^32 numbers.
-pub trait GenRng {
-    /// Get the rng for each polity (a.k.a sovereign entity), each
-    /// should have at least 2^32 non-overlapping range.
-    fn polity_rng(&self, i: usize) -> Self;
+pub trait RngExt {
+    /// advance i * 2^16 steps;
+    fn advance16(&mut self, i: usize);
 
-    /// Get the rng for galaxy, each should have at least 2^64
-    /// non-overlapping range.
-    fn galaxy_rng(&self, i: usize) -> Self;
+    /// advance i * 2^32 steps;
+    fn advance32(&mut self, i: usize);
 
-    /// Get the rng for planetary system generation. Should be called
-    /// from a galaxy rng; each should have at lest 2^32 non-overlapping
-    /// range.
-    fn pln_sys_rng(&self, i: usize) -> Self;
+    /// advance i * 2^48 steps;
+    fn advance48(&mut self, i: usize);
+
+    /// advance i * 2^64 steps;
+    fn advance64(&mut self, i: usize);
 }
 
-impl GenRng for Pcg64Mcg {
-    fn polity_rng(&self, i: usize) -> Self {
-        let mut rng = self.clone();
-        rng.advance(i as u128 * 2_u128.pow(32));
-        rng
+impl RngExt for Pcg64Mcg {
+    fn advance16(&mut self, i: usize) {
+        self.advance(i as u128 * 2_u128.pow(16));
     }
 
-    fn galaxy_rng(&self, i: usize) -> Pcg64Mcg {
-        let mut rng = self.clone();
-        // skip for the polity range.
-        rng.advance(2_u128.pow(64));
-        rng.advance(i as u128 * 2_u128.pow(32));
-        rng
+    fn advance32(&mut self, i: usize) {
+        self.advance(i as u128 * 2_u128.pow(32));
     }
 
-    fn pln_sys_rng(&self, i: usize) -> Pcg64Mcg {
-        let mut rng = self.clone();
-        // skip the range reserved by galaxy itself.
-        rng.advance(2_u128.pow(32));
-        rng.advance(i as u128 * 2_u128.pow(32));
-        rng
+    fn advance48(&mut self, i: usize) {
+        self.advance(i as u128 * 2_u128.pow(48));
+    }
+
+    fn advance64(&mut self, i: usize) {
+        self.advance(i as u128 * 2_u128.pow(64));
     }
 }
 
