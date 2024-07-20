@@ -6,62 +6,50 @@ use bevy::prelude::*;
 use bevy_mod_picking::picking_core::Pickable;
 use sickle_ui::prelude::{generated::*, UiBuilderExt, UiRoot};
 
-/// A marker component for background image.
-#[derive(Component, Copy, Clone, Default, Debug)]
-pub struct MenuBackground;
-
-/// A resource to store all background images.
+/// A component for the background during [crate::AppState::InMenu]
+/// and [crate::AppState::Loading].
 ///
-/// This should exists for the entire [crate::AppState::InMenu]
-/// and [crate::AppState::Loading] to avoid additional resource
-/// loading time when displayed image are changed.
-#[derive(Resource, Clone, Default, Debug)]
-pub struct BackgroundImages {
-    id: usize,
+/// Indicate an entity is menu background. Store all background
+/// images to avoid loading time.
+#[derive(Component, Clone, Default, Debug)]
+pub struct BackgroundImage {
+    current: usize,
     images: Vec<Handle<Image>>,
 }
 
-impl BackgroundImages {
+impl BackgroundImage {
     /// Create a new [BackgroundImages] from a collection of images.
     fn new(images: Vec<Handle<Image>>) -> Self {
-        Self { id: 0, images }
+        Self { current: 0, images }
     }
 
     /// Get the [Handle] of current background image.
     fn image(&self) -> Handle<Image> {
-        self.images[self.id].clone()
+        self.images[self.current].clone()
     }
 
     /// Change to next image.
     fn next(&mut self) {
-        self.id = (self.id + 1) % self.images.len();
+        self.current = (self.current + 1) % self.images.len();
     }
-}
-
-/// Load all the background images for the menu.
-///
-/// # Schedule
-/// Enter [crate::AppState::InMenu]
-pub fn load_background(mut commands: Commands, asserts: Res<AssetServer>) {
-    let images = (0..2)
-        .into_iter()
-        .map(|i| asserts.load(format!("background/{}.png", i)))
-        .collect();
-
-    let resource = BackgroundImages::new(images);
-    commands.insert_resource(resource);
 }
 
 /// Spawn the background for the menu.
 ///
 /// # Schedule
-/// Enter [crate::AppState::InMenu], need to have [BackgroundImages] resource.
+/// Enter [crate::AppState::InMenu].
 pub fn spawn_background(
     mut commands: Commands,
-    background: Res<BackgroundImages>,
+    asserts: Res<AssetServer>,
     q_camera: Query<Entity, With<PrimaryCamera>>,
 ) {
     let camera = q_camera.single();
+
+    let images = (0..2)
+        .into_iter()
+        .map(|i| asserts.load(format!("background/{}.png", i)))
+        .collect();
+    let background = BackgroundImage::new(images);
 
     commands
         .ui_builder(UiRoot)
@@ -71,7 +59,7 @@ pub fn spawn_background(
         })
         .insert(TargetCamera(camera))
         .insert(Name::new("Menu Background"))
-        .insert(MenuBackground)
+        .insert(background)
         .insert(Pickable::IGNORE)
         .style()
         .z_index(ZIndex::Global(-64));
@@ -82,11 +70,12 @@ pub fn spawn_background(
 /// # Schedule
 /// In [crate::AppState::InMenu], need to have [BackgroundImages] resource.
 pub fn update_background(
-    mut background: ResMut<BackgroundImages>,
-    mut q_background: Query<&mut UiImage, With<MenuBackground>>,
+    mut q_background: Query<(&mut UiImage, &mut BackgroundImage), With<BackgroundImage>>,
 ) {
-    background.next();
-    q_background.single_mut().texture = background.image();
+    for (mut image, mut background) in q_background.iter_mut() {
+        background.next();
+        image.texture = background.image();
+    }
 }
 
 /// Remove all background related components and resource.
@@ -95,8 +84,7 @@ pub fn update_background(
 /// Exit [crate::AppState::Loading].
 pub fn clean_background(
     mut commands: Commands,
-    mut q_background: Query<Entity, With<MenuBackground>>,
+    mut q_background: Query<Entity, With<BackgroundImage>>,
 ) {
-    commands.remove_resource::<BackgroundImages>();
     commands.entity(q_background.single_mut()).despawn();
 }

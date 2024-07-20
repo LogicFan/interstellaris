@@ -48,10 +48,7 @@ impl Plugin for InMenuPlugin {
         app.add_sub_state::<MenuState>()
             .enable_state_scoped_entities::<MenuState>()
             .insert_resource(PrevPageStack::default())
-            .add_systems(
-                OnEnter(AppState::InMenu),
-                (load_background, spawn_background).chain(),
-            )
+            .add_systems(OnEnter(AppState::InMenu), spawn_background)
             .add_systems(OnExit(AppStateLoading), clean_background)
             .add_systems(
                 Update,
