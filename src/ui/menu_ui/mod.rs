@@ -49,7 +49,7 @@ impl Plugin for InMenuPlugin {
             .enable_state_scoped_entities::<MenuState>()
             .insert_resource(PrevPageStack::default())
             .add_systems(OnEnter(AppState::InMenu), spawn_background)
-            .add_systems(OnExit(AppStateLoading), clean_background)
+            .add_systems(OnExit(AppStateLoading), despawn_background)
             .add_systems(
                 Update,
                 update_background

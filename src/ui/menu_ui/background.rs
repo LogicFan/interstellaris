@@ -82,7 +82,7 @@ pub fn update_background(
 ///
 /// # Schedule
 /// Exit [crate::AppState::Loading].
-pub fn clean_background(
+pub fn despawn_background(
     mut commands: Commands,
     mut q_background: Query<Entity, With<BackgroundImage>>,
 ) {
