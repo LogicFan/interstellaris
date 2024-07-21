@@ -47,7 +47,7 @@ pub fn spawn_background(
 
     let images = (0..2)
         .into_iter()
-        .map(|i| asserts.load(format!("background/{}.png", i)))
+        .map(|i| asserts.load(format!("menu_ui/wallpaper/{}.png", i)))
         .collect();
     let background = BackgroundImage::new(images);
 
