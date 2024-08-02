@@ -50,3 +50,10 @@ pub fn default_rng() -> Pcg64Mcg {
 
     Pcg64Mcg::new(random_seed)
 }
+
+pub fn beta_params(mu: f32, sigma: f32) -> (f32, f32) {
+    let n = mu * (1.0 - mu) / sigma.powi(2);
+    let alpha = mu * n;
+    let beta = (1.0 - mu) * n;
+    (alpha, beta)
+}

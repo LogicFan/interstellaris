@@ -33,7 +33,7 @@
 //! The path should be a spline and the motion should be
 //! accelerate-constant-decelerate. It should also be possible to terminate
 //! during the motion and smoothly move back the initial position.
-use bevy::prelude::*;
+use bevy::{core_pipeline::{bloom::BloomSettings, tonemapping::Tonemapping}, prelude::*};
 mod free_motion;
 
 pub use crate::ui::settings::InputSettings;
@@ -76,10 +76,16 @@ pub fn spawn_primary_camera(mut commands: Commands) {
     let camera = commands
         .spawn((
             Camera3dBundle {
+                camera: Camera {
+                    hdr: true,
+                    ..default()
+                },
+                tonemapping: Tonemapping::TonyMcMapface,
                 transform: Transform::from_xyz(0.0, 0.0, 50.0),
                 ..default()
             },
             PrimaryCamera,
+            BloomSettings::NATURAL,
         ))
         .id();
 

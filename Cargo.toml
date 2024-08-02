@@ -26,4 +26,3 @@ serde = { version = "1.0", features = ["derive"] }
 # others
 uuid = "1.9"
 voronoice = "0.2"
-voro_rs = "0.2"

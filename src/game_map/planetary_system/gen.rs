@@ -30,23 +30,12 @@ pub fn spawn_planetary_systems(
 ) {
     let mesh = asset.add(Sphere::default().mesh().ico(16).unwrap());
 
-    let min_mass = q_pln_sys
-        .iter()
-        .min_by(|x, y| x.mass.total_cmp(&y.mass))
-        .unwrap()
-        .mass;
-    let max_mass = q_pln_sys
-        .iter()
-        .max_by(|x, y| x.mass.total_cmp(&y.mass))
-        .unwrap()
-        .mass;
-
     for planetary_system in q_pln_sys.iter() {
-        let r = (planetary_system.mass - min_mass) / (max_mass - min_mass);
-        let g = 1.0 - r;
+        // let r = (planetary_system.mass - min_mass) / (max_mass - min_mass);
+        // let b = 1.0 - r;
 
         let material = asset.add(StandardMaterial {
-            emissive: LinearRgba::new(r, g, 0.0, 1.0),
+            base_color: LinearRgba::new(1000.0, 1000.0, 2000.0, 1.0).into(),
             ..default()
         });
 
@@ -65,14 +54,23 @@ pub fn spawn_planetary_systems(
         ));
     }
 
+    commands.spawn(
+        PbrBundle {
+            mesh: asset.add(Cuboid::new(10.0, 10.0, 0.1).mesh().build()),
+            material: asset.add(StandardMaterial {
+                base_color: LinearRgba::new(1.0, 1.0, 1.0, 1.0).into(),
+                ..default()
+            }),
+            ..default()
+        }
+    );
+
     *cam_mo = MotionMode::FreeMotion {
         min_h: 32.0,
         max_h: 100.0,
         max_θ: PI / 3.0,
         max_r: q_galaxy.single().max.x * 2.0,
     };
-
-    info!("123");
 
     app_state.set(AppState::InGame);
 }

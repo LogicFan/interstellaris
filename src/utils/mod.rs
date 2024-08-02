@@ -5,4 +5,4 @@ mod object_id;
 mod random;
 
 pub use object_id::{ObjectId, ObjectRef};
-pub use random::{default_rng, RngExt};
+pub use random::{default_rng, RngExt, beta_params};
