@@ -17,7 +17,7 @@ impl Default for ObjectId {
 /// A struct to record [ObjectId] and [Entity] info,
 /// usually useful or record relation between
 /// game objects.
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq, Hash)]
 pub struct ObjectRef {
     /// The stable id for the game object
     pub id: ObjectId,

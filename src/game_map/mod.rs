@@ -8,5 +8,8 @@ use bevy::prelude::Component;
 /// Determine which coordinate system the entity is using. If it's None, then
 /// a global coordinate system is used; otherwise, the coordinate system of
 /// `ObjectRef` planetary system is used.
-#[derive(Component, Copy, Clone, Debug)]
-pub struct Coordinate(pub Option<ObjectRef>);
+#[derive(Component, Copy, Clone, Debug, PartialEq, Eq, Hash)]
+pub enum Coordinate {
+    Galaxy(ObjectRef),
+    PlnSys(ObjectRef),
+}

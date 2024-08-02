@@ -54,16 +54,14 @@ pub fn spawn_planetary_systems(
         ));
     }
 
-    commands.spawn(
-        PbrBundle {
-            mesh: asset.add(Cuboid::new(10.0, 10.0, 0.1).mesh().build()),
-            material: asset.add(StandardMaterial {
-                base_color: LinearRgba::new(1.0, 1.0, 1.0, 1.0).into(),
-                ..default()
-            }),
+    commands.spawn(PbrBundle {
+        mesh: asset.add(Cuboid::new(10.0, 10.0, 0.1).mesh().build()),
+        material: asset.add(StandardMaterial {
+            base_color: LinearRgba::new(1.0, 1.0, 1.0, 1.0).into(),
             ..default()
-        }
-    );
+        }),
+        ..default()
+    });
 
     *cam_mo = MotionMode::FreeMotion {
         min_h: 32.0,

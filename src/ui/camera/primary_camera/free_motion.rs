@@ -7,6 +7,14 @@ use bevy::input::mouse::{MouseMotion, MouseWheel};
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
 
+#[derive(Component, Copy, Clone, Default, Debug)]
+pub struct FreeMotion {
+    h0: f32,
+    h1: f32,
+    θ0: f32,
+    r0: f32,
+}
+
 /// Run condition for the system under this module.
 pub fn is_free_motion(r_motion_mode: Res<MotionMode>) -> bool {
     match *r_motion_mode {
