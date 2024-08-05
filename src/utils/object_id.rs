@@ -20,10 +20,16 @@ impl Default for ObjectId {
 #[derive(Copy, Clone, Debug, PartialEq, Eq, Hash)]
 pub struct ObjectRef {
     /// The stable id for the game object
-    pub id: ObjectId,
+    pub object_id: ObjectId,
     /// The id used by bevy internally. It will change
     /// at each run.
     pub entity: Entity,
+}
+
+impl ObjectRef {
+    pub fn new(entity: Entity, object_id: ObjectId) -> Self {
+        Self { object_id, entity }
+    }
 }
 
 impl Serialize for ObjectRef {
@@ -31,7 +37,7 @@ impl Serialize for ObjectRef {
     where
         S: serde::Serializer,
     {
-        self.id.serialize(serializer)
+        self.object_id.serialize(serializer)
     }
 }
 
@@ -42,7 +48,7 @@ impl<'de> Deserialize<'de> for ObjectRef {
     {
         let id = ObjectId::deserialize(deserializer)?;
         Ok(Self {
-            id,
+            object_id: id,
             entity: Entity::PLACEHOLDER,
         })
     }

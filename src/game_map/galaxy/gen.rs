@@ -1,8 +1,8 @@
 use super::Galaxy;
-use super::GalaxySize;
 use crate::game_map::gen::GenState;
 use crate::game_map::planetary_system::gen::PlnSysGenParams;
 use crate::game_map::planetary_system::PlanetarySystem;
+use crate::game_map::BoundingSize;
 use crate::utils::beta_params;
 use crate::utils::ObjectId;
 use crate::utils::{default_rng, RngExt};
@@ -47,7 +47,7 @@ impl GalaxyGenParams {
     }
 
     fn height(&self) -> f32 {
-        16.0
+        12.0
     }
 
     fn delta(&self) -> f32 {
@@ -90,10 +90,7 @@ pub fn handle_galaxy_gen_task(
                 .entity(entity)
                 .remove::<GalaxyGenParams>()
                 .remove::<GenTask>()
-                .insert(GalaxySize {
-                    min: Vec3::NEG_ONE * xyz,
-                    max: Vec3::ONE * xyz,
-                })
+                .insert(BoundingSize(xyz))
                 .insert(ObjectId::default());
 
             for params in planetary_systems {
@@ -120,7 +117,7 @@ fn new_planetary_systems(galaxy: GalaxyGenParams, mut rng: Pcg64Mcg) -> Vec<PlnS
             let (alpha, beta) = beta_params(0.5, SIGMA);
             Beta::new(alpha, beta)
                 .unwrap()
-                .map(|x| (x - 0.5) * galaxy.height())
+                .map(|x| (x - 0.5) * 2.0 * galaxy.height())
         };
 
         // double the number of iterations to compensate for potential

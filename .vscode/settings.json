@@ -4,6 +4,7 @@
         "consts",
         "despawn",
         "egui",
+        "Mapface",
         "Pickable",
         "powf",
         "powi",
@@ -11,6 +12,7 @@
         "serde",
         "srgba",
         "stellaris",
+        "tonemapping",
         "voronoi",
         "voronoice"
     ]
