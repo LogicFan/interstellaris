@@ -21,7 +21,7 @@ use bevy::prelude::*;
 mod free_motion;
 use super::CameraMotionSystemSet;
 pub use crate::ui::settings::InputSettings;
-pub use free_motion::FreeMotionController as PrimCamFreeMotion;
+pub use free_motion::FreeMotionCtrl as PrimCamFreeMotion;
 
 /// The marker component of primary camera.
 #[derive(Component, Copy, Clone, Default, Debug)]

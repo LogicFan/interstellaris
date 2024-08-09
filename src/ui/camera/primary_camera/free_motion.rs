@@ -18,17 +18,19 @@ use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
 
 #[derive(Component, Copy, Clone, Default, Debug)]
-pub struct FreeMotionController(Vec2);
+pub struct FreeMotionCtrl {
+    half_size: Vec2,
+}
 
-impl FreeMotionController {
+impl FreeMotionCtrl {
     pub fn new(half_size: Vec2) -> Self {
-        Self(half_size)
+        Self { half_size }
     }
 
     // TODO: add constraint
     fn horizontal_move(&self, transform: &mut Transform, delta: Vec2) {
         let mut xy = transform.translation.xy() + delta;
-        xy = xy.clamp(-1.0 * self.0, self.0);
+        xy = xy.clamp(-1.0 * self.half_size, self.half_size);
 
         transform.translation.x = xy.x;
         transform.translation.y = xy.y;
@@ -39,15 +41,13 @@ impl FreeMotionController {
 /// # Schedule
 /// `PostUpdate`, if `is_free_motion` is true, before transform propagation
 pub fn run(
-    mut q_camera: Query<(&mut Transform, &FreeMotionController), With<PrimaryCamera>>,
+    mut q_camera: Query<(&mut Transform, &FreeMotionCtrl), With<PrimaryCamera>>,
     q_window: Query<&Window, With<PrimaryWindow>>,
     r_settings: Res<InputSettings>,
 ) {
     let window = q_window.single();
 
     if let Some((mut transform, controller)) = q_camera.get_single_mut().ok() {
-        info!("123");
-
         match window.cursor_position() {
             None => (),
             Some(p) => {
