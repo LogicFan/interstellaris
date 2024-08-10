@@ -4,6 +4,7 @@ use super::planetary_system::gen::spawn_planetary_systems;
 use super::{BoundingSize, Coordinate};
 use crate::states::AppStateLoading;
 use crate::ui::camera::PrimCamFreeMotion;
+use crate::ui::confine_pointer;
 use crate::utils::{ObjectId, ObjectRef};
 use crate::{states::LoadSource, ui::PrimaryCamera, AppState};
 use bevy::prelude::*;
@@ -44,6 +45,9 @@ impl Plugin for GampMapGenPlugin {
                 handle_galaxy_gen_task.run_if(in_state(GenState::InitGalaxy)),
             )
             .add_systems(OnEnter(GenState::InitPlnSys), spawn_planetary_systems)
-            .add_systems(OnExit(AppStateLoading), setup_primary_camera);
+            .add_systems(
+                OnExit(AppStateLoading),
+                (setup_primary_camera, confine_pointer),
+            );
     }
 }

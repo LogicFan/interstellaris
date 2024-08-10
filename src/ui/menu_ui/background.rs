@@ -1,10 +1,10 @@
 //! The background image for [crate::AppState::InMenu] and
 //! [crate::AppState::Loading]
 
-use crate::ui::{menu_ui::ui_builder_ext::MenuUiBuilderExt0, PrimaryCamera};
+use crate::ui::PrimaryCamera;
 use bevy::prelude::*;
 use bevy_mod_picking::picking_core::Pickable;
-use sickle_ui::prelude::{generated::*, UiBuilderExt, UiRoot};
+use sickle_ui::prelude::{generated::*, UiBuilder, UiBuilderExt, UiRoot};
 
 /// A component for the background during [crate::AppState::InMenu]
 /// and [crate::AppState::Loading].
@@ -53,7 +53,7 @@ pub fn spawn_background(
 
     commands
         .ui_builder(UiRoot)
-        .background_image(UiImage {
+        .wallpaper(UiImage {
             texture: background.image(),
             ..default()
         })
@@ -87,4 +87,30 @@ pub fn despawn_background(
     mut q_background: Query<Entity, With<BackgroundImage>>,
 ) {
     commands.entity(q_background.single_mut()).despawn();
+}
+
+/// UI builder extension for spawn wallpaper.
+trait UiWallpaperBuilder {
+    fn wallpaper(&mut self, image: UiImage) -> UiBuilder<'_, Entity>;
+}
+
+impl UiWallpaperBuilder for UiBuilder<'_, UiRoot> {
+    fn wallpaper(&mut self, image: UiImage) -> UiBuilder<'_, Entity> {
+        let mut builder = self.spawn(ImageBundle { image, ..default() });
+
+        // the background image always has 16:9 aspect ratio.
+        const ASPECT_RATIO: f32 = 16.0 / 9.0;
+
+        builder
+            .style()
+            .align_self(AlignSelf::Center)
+            .justify_self(JustifySelf::Center)
+            .min_height(Val::Vh(100.0))
+            .max_height(Val::Vw(ASPECT_RATIO.recip() * 100.0))
+            .min_width(Val::Vw(100.0))
+            .max_width(Val::Vh(ASPECT_RATIO * 100.0))
+            .aspect_ratio(Some(ASPECT_RATIO));
+
+        builder
+    }
 }

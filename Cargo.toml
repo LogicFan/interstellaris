@@ -25,4 +25,3 @@ rand_distr = "0.4"
 serde = { version = "1.0", features = ["derive"] }
 # others
 uuid = "1.9"
-voronoice = "0.2"

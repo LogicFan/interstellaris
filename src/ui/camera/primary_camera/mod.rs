@@ -29,8 +29,8 @@ pub struct PrimaryCamera;
 
 /// Spawn a new primary camera.
 /// # Schedule
-/// `Startup`
-pub fn spawn_primary_camera(mut commands: Commands) {
+/// [PreStartup]
+pub fn setup(mut commands: Commands) {
     commands.spawn((
         Camera3dBundle {
             camera: Camera {
@@ -50,7 +50,7 @@ pub struct PrimaryCameraPlugin;
 
 impl Plugin for PrimaryCameraPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, spawn_primary_camera).add_systems(
+        app.add_systems(PreStartup, setup).add_systems(
             Update,
             free_motion::run.in_set(CameraMotionSystemSet::PrimaryCamera),
         );

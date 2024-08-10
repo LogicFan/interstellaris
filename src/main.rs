@@ -1,6 +1,5 @@
 use bevy::prelude::*;
-// use bevy_editor_pls::prelude::*;
-use bevy_mod_picking::DefaultPickingPlugins;
+use bevy_mod_picking::{low_latency_window_plugin, DefaultPickingPlugins};
 use sickle_ui::SickleUiPlugin;
 use stellaris::game_map::gen::GampMapGenPlugin;
 use stellaris::ui::*;
@@ -10,12 +9,9 @@ fn main() {
     let mut app = App::new();
 
     // third-party plugins
-    app.add_plugins(DefaultPlugins)
+    app.add_plugins(DefaultPlugins.set(low_latency_window_plugin()))
         .add_plugins(DefaultPickingPlugins)
         .add_plugins(SickleUiPlugin);
-
-    // debug plugins, TODO: remove before release
-    // app.add_plugins(EditorPlugin::default());
 
     // internal plugins
     app.add_plugins(CorePlugin)
