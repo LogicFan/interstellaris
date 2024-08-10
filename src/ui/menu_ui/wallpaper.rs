@@ -1,15 +1,15 @@
-//! The background image for [crate::AppState::InMenu] and
-//! [crate::AppState::Loading]
+//! The wallpapers for [crate::AppState::InMenu] and
+//! [crate::AppState::Loading] states.
 
 use crate::ui::PrimaryCamera;
 use bevy::prelude::*;
 use bevy_mod_picking::picking_core::Pickable;
 use sickle_ui::prelude::{generated::*, UiBuilder, UiBuilderExt, UiRoot};
 
-/// A component for the background during [crate::AppState::InMenu]
+/// A component for the wallpapers during [crate::AppState::InMenu]
 /// and [crate::AppState::Loading].
 ///
-/// Indicate an entity is menu background. Store all background
+/// Indicate an entity is wallpapers. Store all background
 /// images to avoid loading time.
 #[derive(Component, Clone, Default, Debug)]
 pub struct Wallpapers {
@@ -68,7 +68,7 @@ pub fn setup(
 /// Update background image to next image.
 ///
 /// # Schedule
-/// In [crate::AppState::InMenu], need to have [BackgroundImages] resource.
+/// In [crate::AppState::InMenu], need to have [Wallpapers] resource.
 pub fn update(mut q_background: Query<(&mut UiImage, &mut Wallpapers), With<Wallpapers>>) {
     for (mut image, mut background) in q_background.iter_mut() {
         background.next();
@@ -85,11 +85,11 @@ pub fn cleanup(mut commands: Commands, mut q_background: Query<Entity, With<Wall
 }
 
 /// UI builder extension for spawn wallpaper.
-trait UiWallpaperBuilder {
+trait WallpaperUiBuilderExt {
     fn wallpaper(&mut self, image: UiImage) -> UiBuilder<'_, Entity>;
 }
 
-impl UiWallpaperBuilder for UiBuilder<'_, UiRoot> {
+impl WallpaperUiBuilderExt for UiBuilder<'_, UiRoot> {
     fn wallpaper(&mut self, image: UiImage) -> UiBuilder<'_, Entity> {
         let mut builder = self.spawn(ImageBundle { image, ..default() });
 

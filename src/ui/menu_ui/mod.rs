@@ -1,5 +1,6 @@
 //! The menu UI.
 
+mod configs;
 mod load_game_page;
 mod main_page;
 mod new_game_page;
@@ -9,7 +10,7 @@ mod ui_builder_ext;
 mod wallpaper;
 
 pub use crate::ui::camera::PrimaryCamera as UiCamera;
-pub use crate::ui::settings::UiSettings;
+pub use configs::Configs as UiConfigs;
 
 use crate::states::AppStateLoading;
 use crate::AppState;
@@ -47,6 +48,7 @@ impl Plugin for InMenuPlugin {
         app.add_sub_state::<MenuState>()
             .enable_state_scoped_entities::<MenuState>()
             .insert_resource(PrevPageStack::default())
+            .insert_resource(configs::Configs::default())
             .add_systems(OnEnter(AppState::InMenu), wallpaper::setup)
             .add_systems(OnExit(AppStateLoading), wallpaper::cleanup)
             .add_systems(

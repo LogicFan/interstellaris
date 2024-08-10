@@ -1,18 +1,18 @@
-use super::{ui_builder_ext::MenuUiBuilderExt0, MenuState, UiCamera, UiSettings};
+use super::{ui_builder_ext::MenuUiBuilderExt0, MenuState, UiCamera, UiConfigs};
 use bevy::prelude::*;
 use sickle_ui::prelude::*;
 
 pub fn spawn_load_game_menu(
     mut commands: Commands,
     q_camera: Query<Entity, With<UiCamera>>,
-    ui_settings: Res<UiSettings>,
+    cfg: Res<UiConfigs>,
 ) {
     let camera = q_camera.single();
 
     commands
         .ui_builder(UiRoot)
         .sub_menu_container(
-            &ui_settings,
+            &cfg,
             "Start",
             || {},
             |parent| {

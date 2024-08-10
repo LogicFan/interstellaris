@@ -1,12 +1,13 @@
 //! Main page of the menu.
-
-use super::ui_builder_ext::*;
 use super::MenuState;
-use super::PrevPageStack;
 use super::UiCamera;
-use super::UiSettings;
+use super::UiConfigs;
 use bevy::prelude::*;
-use bevy_mod_picking::prelude::*;
+use bevy_mod_picking::events::*;
+use bevy_mod_picking::prelude::On;
+use bevy_mod_picking::prelude::Pickable;
+use sickle_ui::prelude::UiBuilder;
+use sickle_ui::prelude::UiContainerExt;
 use sickle_ui::prelude::{generated::*, UiBuilderExt, UiColumnExt, UiRoot};
 
 /// Spawn the UI for main menu.
@@ -16,58 +17,128 @@ use sickle_ui::prelude::{generated::*, UiBuilderExt, UiColumnExt, UiRoot};
 pub fn spawn_main_menu(
     mut commands: Commands,
     q_camera: Query<Entity, With<UiCamera>>,
-    ui_settings: Res<UiSettings>,
+    cfg: Res<UiConfigs>,
 ) {
     let camera = q_camera.single();
 
     commands
         .ui_builder(UiRoot)
-        .column(|column| {
-            column
-                .large_text_button(&ui_settings, "New Game")
-                .insert(On::<Pointer<Click>>::run(
-                    |mut state: ResMut<NextState<MenuState>>, mut stack: ResMut<PrevPageStack>| {
-                        state.set(MenuState::NewGamePage);
-                        stack.0.push(MenuState::MainPage);
-                    },
-                ));
-            column
-                .large_text_button(&ui_settings, "Load Game")
-                .insert(On::<Pointer<Click>>::run(
-                    |mut state: ResMut<NextState<MenuState>>, mut stack: ResMut<PrevPageStack>| {
-                        state.set(MenuState::LoadGamePage);
-                        stack.0.push(MenuState::MainPage);
-                    },
-                ));
-            column
-                .large_text_button(&ui_settings, "Online Game")
-                .insert(On::<Pointer<Click>>::run(
-                    |mut state: ResMut<NextState<MenuState>>, mut stack: ResMut<PrevPageStack>| {
-                        state.set(MenuState::OnlineGamePage);
-                        stack.0.push(MenuState::MainPage);
-                    },
-                ));
-            column
-                .large_text_button(&ui_settings, "Settings")
-                .insert(On::<Pointer<Click>>::run(
-                    |mut state: ResMut<NextState<MenuState>>, mut stack: ResMut<PrevPageStack>| {
-                        state.set(MenuState::SettingsPage);
-                        stack.0.push(MenuState::MainPage);
-                    },
-                ));
-            column
-                .large_text_button(&ui_settings, "Exit")
-                .insert(On::<Pointer<Click>>::run(|mut e: EventWriter<AppExit>| {
-                    e.send(AppExit::Success);
-                }));
-        })
+        .main_page(&cfg)
         .insert(TargetCamera(camera))
-        .insert(Name::new("Main Menu"))
-        .insert(StateScoped(MenuState::MainPage))
-        .style()
-        .row_gap(Val::Px(16.0))
-        .align_self(AlignSelf::Center)
-        .justify_self(JustifySelf::Center)
-        .align_content(AlignContent::Center)
-        .justify_content(JustifyContent::Center);
+        .insert(Name::new("Main Page"))
+        .insert(StateScoped(MenuState::MainPage));
 }
+
+/// The UI builder for main page.
+trait MainPageUiBuilderExt: UiContainerExt + UiColumnExt {
+    fn button<T>(
+        &mut self,
+        cfg: &UiConfigs,
+        content: (&str, impl IntoSystem<(), (), T>),
+    ) -> UiBuilder<'_, Entity> {
+        let ui_scale = cfg.scale * 1.3;
+        let text_color = cfg.text.color;
+
+        let text_style = TextStyle {
+            font: cfg.text.font.clone(),
+            font_size: 16.0 * ui_scale,
+            color: text_color,
+        };
+
+        let mut builder = self.container(ButtonBundle::default(), |parent| {
+            parent
+                .spawn(TextBundle::from_section(content.0, text_style))
+                .insert(Pickable::IGNORE);
+        });
+
+        let ui_color_none = cfg.menu.color_none;
+        let ui_color_focus = cfg.menu.color_focus;
+
+        builder
+            .insert(On::<Pointer<Out>>::target_component_mut::<BackgroundColor>(
+                move |_, bg_color| {
+                    bg_color.0 = ui_color_none;
+                },
+            ))
+            .insert(
+                On::<Pointer<Over>>::target_component_mut::<BackgroundColor>(move |_, bg_color| {
+                    bg_color.0 = ui_color_focus;
+                }),
+            )
+            .insert(On::<Pointer<Click>>::run(content.1));
+
+        builder
+            .style()
+            .align_content(AlignContent::Center)
+            .padding(UiRect::all(Val::Px(4.0)))
+            .border(UiRect::all(Val::Px(1.0)))
+            .border_color(text_color)
+            .background_color(ui_color_none);
+
+        builder
+    }
+
+    fn main_page(&mut self, cfg: &UiConfigs) -> UiBuilder<'_, Entity> {
+        let mut builder = self.column(|column| {
+            column
+                .button(
+                    &cfg,
+                    ("New Game", |mut state: ResMut<NextState<MenuState>>| {
+                        state.set(MenuState::NewGamePage);
+                    }),
+                )
+                .style()
+                .width(Val::Percent(100.0));
+            column
+                .button(
+                    &cfg,
+                    ("Load Game", |mut state: ResMut<NextState<MenuState>>| {
+                        state.set(MenuState::LoadGamePage);
+                    }),
+                )
+                .style()
+                .width(Val::Percent(100.0));
+            column
+                .button(
+                    &cfg,
+                    ("Online Game", |mut state: ResMut<NextState<MenuState>>| {
+                        state.set(MenuState::OnlineGamePage);
+                    }),
+                )
+                .style()
+                .width(Val::Percent(100.0));
+            column
+                .button(
+                    &cfg,
+                    ("Settings", |mut state: ResMut<NextState<MenuState>>| {
+                        state.set(MenuState::SettingsPage);
+                    }),
+                )
+                .style()
+                .width(Val::Percent(100.0));
+            column
+                .button(
+                    &cfg,
+                    ("Exit", |mut app_exit: EventWriter<AppExit>| {
+                        app_exit.send(AppExit::Success);
+                    }),
+                )
+                .style()
+                .width(Val::Percent(100.0));
+        });
+
+        builder
+            .style()
+            .width(Val::Px(200.0 * cfg.scale))
+            .row_gap(Val::Px(32.0))
+            .align_self(AlignSelf::Center)
+            .left(Val::Percent(10.0))
+            .align_content(AlignContent::Center)
+            .justify_content(JustifyContent::Center);
+
+        builder
+    }
+}
+
+impl MainPageUiBuilderExt for UiBuilder<'_, UiRoot> {}
+impl MainPageUiBuilderExt for UiBuilder<'_, Entity> {}

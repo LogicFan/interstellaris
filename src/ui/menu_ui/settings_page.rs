@@ -1,4 +1,4 @@
-use super::{ui_builder_ext::MenuUiBuilderExt0, MenuState, UiCamera, UiSettings};
+use super::{ui_builder_ext::MenuUiBuilderExt0, MenuState, UiCamera, UiConfigs};
 use bevy::prelude::*;
 use sickle_ui::prelude::*;
 
@@ -8,7 +8,7 @@ pub struct SettingsMenu;
 pub fn spawn_settings_menu(
     mut commands: Commands,
     q_camera: Query<Entity, With<UiCamera>>,
-    ui_settings: Res<UiSettings>,
+    ui_settings: Res<UiConfigs>,
 ) {
     let camera = q_camera.single();
 
