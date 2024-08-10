@@ -56,14 +56,6 @@ pub trait TextButtonUiBuilderExt: UiContainerExt {
         builder
     }
 
-    fn large_text_button<T>(
-        &mut self,
-        cfg: &Configs,
-        content: (&str, impl IntoSystem<(), (), T>),
-    ) -> UiBuilder<'_, Entity> {
-        self.text_button(cfg, 2.0, content)
-    }
-
     fn medium_text_button<T>(
         &mut self,
         cfg: &Configs,
