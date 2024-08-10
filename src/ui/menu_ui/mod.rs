@@ -1,19 +1,18 @@
 //! The menu UI.
 
-mod wallpaper;
 mod load_game_page;
 mod main_page;
 mod new_game_page;
 mod online_game_page;
 mod settings_page;
 mod ui_builder_ext;
+mod wallpaper;
 
 pub use crate::ui::camera::PrimaryCamera as UiCamera;
 pub use crate::ui::settings::UiSettings;
 
 use crate::states::AppStateLoading;
 use crate::AppState;
-use wallpaper::*;
 use bevy::prelude::*;
 use bevy::time::common_conditions::on_timer;
 use load_game_page::*;
@@ -48,11 +47,11 @@ impl Plugin for InMenuPlugin {
         app.add_sub_state::<MenuState>()
             .enable_state_scoped_entities::<MenuState>()
             .insert_resource(PrevPageStack::default())
-            .add_systems(OnEnter(AppState::InMenu), spawn_background)
-            .add_systems(OnExit(AppStateLoading), despawn_background)
+            .add_systems(OnEnter(AppState::InMenu), wallpaper::setup)
+            .add_systems(OnExit(AppStateLoading), wallpaper::cleanup)
             .add_systems(
                 Update,
-                update_background
+                wallpaper::update
                     .run_if(on_timer(Duration::from_secs(10)).and_then(in_state(AppStateLoading))),
             )
             .add_systems(OnEnter(MenuState::MainPage), spawn_main_menu)

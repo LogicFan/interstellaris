@@ -12,13 +12,13 @@ use sickle_ui::prelude::{generated::*, UiBuilder, UiBuilderExt, UiRoot};
 /// Indicate an entity is menu background. Store all background
 /// images to avoid loading time.
 #[derive(Component, Clone, Default, Debug)]
-pub struct BackgroundImage {
+pub struct Wallpapers {
     current: usize,
     images: Vec<Handle<Image>>,
 }
 
-impl BackgroundImage {
-    /// Create a new [BackgroundImages] from a collection of images.
+impl Wallpapers {
+    /// Create a new [Wallpapers] from a collection of images.
     fn new(images: Vec<Handle<Image>>) -> Self {
         Self { current: 0, images }
     }
@@ -38,7 +38,7 @@ impl BackgroundImage {
 ///
 /// # Schedule
 /// Enter [crate::AppState::InMenu].
-pub fn spawn_background(
+pub fn setup(
     mut commands: Commands,
     asserts: Res<AssetServer>,
     q_camera: Query<Entity, With<PrimaryCamera>>,
@@ -49,7 +49,7 @@ pub fn spawn_background(
         .into_iter()
         .map(|i| asserts.load(format!("menu_ui/wallpaper/{}.png", i)))
         .collect();
-    let background = BackgroundImage::new(images);
+    let background = Wallpapers::new(images);
 
     commands
         .ui_builder(UiRoot)
@@ -69,9 +69,7 @@ pub fn spawn_background(
 ///
 /// # Schedule
 /// In [crate::AppState::InMenu], need to have [BackgroundImages] resource.
-pub fn update_background(
-    mut q_background: Query<(&mut UiImage, &mut BackgroundImage), With<BackgroundImage>>,
-) {
+pub fn update(mut q_background: Query<(&mut UiImage, &mut Wallpapers), With<Wallpapers>>) {
     for (mut image, mut background) in q_background.iter_mut() {
         background.next();
         image.texture = background.image();
@@ -82,10 +80,7 @@ pub fn update_background(
 ///
 /// # Schedule
 /// Exit [crate::AppState::Loading].
-pub fn despawn_background(
-    mut commands: Commands,
-    mut q_background: Query<Entity, With<BackgroundImage>>,
-) {
+pub fn cleanup(mut commands: Commands, mut q_background: Query<Entity, With<Wallpapers>>) {
     commands.entity(q_background.single_mut()).despawn();
 }
 
