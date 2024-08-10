@@ -2,7 +2,7 @@
 use bevy::{
     asset::Handle,
     color::{palettes::tailwind, Alpha, Color},
-    prelude::{default, Resource},
+    prelude::Resource,
     reflect::Reflect,
     text::Font,
 };
