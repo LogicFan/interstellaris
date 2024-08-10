@@ -1,6 +1,6 @@
 //! The menu UI.
 
-mod background;
+mod wallpaper;
 mod load_game_page;
 mod main_page;
 mod new_game_page;
@@ -13,7 +13,7 @@ pub use crate::ui::settings::UiSettings;
 
 use crate::states::AppStateLoading;
 use crate::AppState;
-use background::*;
+use wallpaper::*;
 use bevy::prelude::*;
 use bevy::time::common_conditions::on_timer;
 use load_game_page::*;
