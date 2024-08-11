@@ -1,11 +1,11 @@
-use super::{ui_builder_ext::MenuUiBuilderExt0, MenuState, UiCamera, UiConfigs};
+use super::{menu_page::MenuUiBuilderExt0, MenuState, UiCamera, UiConfigs};
 use bevy::prelude::*;
 use sickle_ui::prelude::*;
 
 #[derive(Component, Copy, Clone, Default, Debug)]
-pub struct OnlineMenu;
+pub struct SettingsMenu;
 
-pub fn spawn_online_menu(
+pub fn spawn_settings_menu(
     mut commands: Commands,
     q_camera: Query<Entity, With<UiCamera>>,
     ui_settings: Res<UiConfigs>,
@@ -36,7 +36,7 @@ pub fn spawn_online_menu(
             },
         )
         .insert(TargetCamera(camera))
-        .insert(OnlineMenu)
-        .insert(Name::new("Online Game Menu"))
-        .insert(StateScoped(MenuState::OnlineGamePage));
+        .insert(SettingsMenu)
+        .insert(Name::new("Settings Menu"))
+        .insert(StateScoped(MenuState::SettingsPage));
 }

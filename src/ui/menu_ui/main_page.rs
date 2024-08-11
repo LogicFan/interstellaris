@@ -14,34 +14,34 @@ use sickle_ui::prelude::{generated::*, UiBuilderExt, UiColumnExt, UiRoot};
 ///
 /// # Schedule
 /// Enter [super::MenuState::MainPage]
-pub fn spawn_main_menu(
+pub fn setup(
     mut commands: Commands,
     q_camera: Query<Entity, With<UiCamera>>,
-    cfg: Res<UiConfigs>,
+    ui_config: Res<UiConfigs>,
 ) {
     let camera = q_camera.single();
 
     commands
         .ui_builder(UiRoot)
-        .main_page(&cfg)
+        .main_page(&ui_config)
         .insert(TargetCamera(camera))
         .insert(Name::new("Main Page"))
         .insert(StateScoped(MenuState::MainPage));
 }
 
 /// The UI builder for main page.
-trait MainPageUiBuilderExt: UiContainerExt + UiColumnExt {
-    fn button<T>(
+trait UiMainPageExt: UiContainerExt + UiColumnExt {
+    fn _button<T>(
         &mut self,
         cfg: &UiConfigs,
         content: (&str, impl IntoSystem<(), (), T>),
     ) -> UiBuilder<'_, Entity> {
-        let ui_scale = cfg.scale * 1.3;
+        let scale = cfg.scale * 1.5;
         let text_color = cfg.text.color;
 
         let text_style = TextStyle {
             font: cfg.text.font.clone(),
-            font_size: 16.0 * ui_scale,
+            font_size: 16.0 * scale,
             color: text_color,
         };
 
@@ -81,7 +81,7 @@ trait MainPageUiBuilderExt: UiContainerExt + UiColumnExt {
     fn main_page(&mut self, cfg: &UiConfigs) -> UiBuilder<'_, Entity> {
         let mut builder = self.column(|column| {
             column
-                .button(
+                ._button(
                     &cfg,
                     ("New Game", |mut state: ResMut<NextState<MenuState>>| {
                         state.set(MenuState::NewGamePage);
@@ -90,7 +90,7 @@ trait MainPageUiBuilderExt: UiContainerExt + UiColumnExt {
                 .style()
                 .width(Val::Percent(100.0));
             column
-                .button(
+                ._button(
                     &cfg,
                     ("Load Game", |mut state: ResMut<NextState<MenuState>>| {
                         state.set(MenuState::LoadGamePage);
@@ -99,7 +99,7 @@ trait MainPageUiBuilderExt: UiContainerExt + UiColumnExt {
                 .style()
                 .width(Val::Percent(100.0));
             column
-                .button(
+                ._button(
                     &cfg,
                     ("Online Game", |mut state: ResMut<NextState<MenuState>>| {
                         state.set(MenuState::OnlineGamePage);
@@ -108,7 +108,7 @@ trait MainPageUiBuilderExt: UiContainerExt + UiColumnExt {
                 .style()
                 .width(Val::Percent(100.0));
             column
-                .button(
+                ._button(
                     &cfg,
                     ("Settings", |mut state: ResMut<NextState<MenuState>>| {
                         state.set(MenuState::SettingsPage);
@@ -117,7 +117,7 @@ trait MainPageUiBuilderExt: UiContainerExt + UiColumnExt {
                 .style()
                 .width(Val::Percent(100.0));
             column
-                .button(
+                ._button(
                     &cfg,
                     ("Exit", |mut app_exit: EventWriter<AppExit>| {
                         app_exit.send(AppExit::Success);
@@ -126,6 +126,8 @@ trait MainPageUiBuilderExt: UiContainerExt + UiColumnExt {
                 .style()
                 .width(Val::Percent(100.0));
         });
+
+        builder.insert(Pickable::IGNORE);
 
         builder
             .style()
@@ -140,5 +142,5 @@ trait MainPageUiBuilderExt: UiContainerExt + UiColumnExt {
     }
 }
 
-impl MainPageUiBuilderExt for UiBuilder<'_, UiRoot> {}
-impl MainPageUiBuilderExt for UiBuilder<'_, Entity> {}
+impl UiMainPageExt for UiBuilder<'_, UiRoot> {}
+impl UiMainPageExt for UiBuilder<'_, Entity> {}

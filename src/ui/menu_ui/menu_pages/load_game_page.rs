@@ -1,4 +1,4 @@
-use super::{ui_builder_ext::MenuUiBuilderExt0, MenuState, UiCamera, UiConfigs};
+use super::{menu_page::MenuUiBuilderExt0, MenuState, UiCamera, UiConfigs};
 use bevy::prelude::*;
 use sickle_ui::prelude::*;
 

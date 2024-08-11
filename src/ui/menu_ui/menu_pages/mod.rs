@@ -1,21 +1,30 @@
-use super::{configs::Configs, MenuState, PrevPageStack};
-use bevy::prelude::*;
-use bevy_mod_picking::prelude::{Click, On, Out, Over, Pickable, Pointer};
-use sickle_ui::prelude::{generated::*, UiBuilder, UiColumnExt, UiContainerExt, UiRoot, UiRowExt};
+mod new_game_page;
 
-pub trait TextButtonUiBuilderExt: UiContainerExt {
-    fn text_button<T>(
+pub use super::{UiConfigs, UiCamera, MenuState};
+use bevy::prelude::*;
+use bevy_mod_picking::{
+    events::*,
+    prelude::{On, Pickable},
+};
+use sickle_ui::prelude::{generated::*, UiBuilder, UiColumnExt, UiContainerExt, UiRoot, UiRowExt};
+pub use new_game_page::setup as setup_new_game_page;
+
+fn default_button_back_action(mut state: ResMut<NextState<MenuState>>) {
+    state.set(MenuState::MainPage)
+}
+
+pub trait UiMenuPageExt: UiContainerExt + UiColumnExt {
+    fn _button<T>(
         &mut self,
-        cfg: &Configs,
-        scale: f32,
+        cfg: &UiConfigs,
         content: (&str, impl IntoSystem<(), (), T>),
     ) -> UiBuilder<'_, Entity> {
-        let ui_scale = cfg.scale * scale;
+        let scale = cfg.scale * 1.5;
         let text_color = cfg.text.color;
 
         let text_style = TextStyle {
             font: cfg.text.font.clone(),
-            font_size: 16.0 * ui_scale,
+            font_size: 16.0 * scale,
             color: text_color,
         };
 
@@ -48,7 +57,8 @@ pub trait TextButtonUiBuilderExt: UiContainerExt {
             .style()
             .align_content(AlignContent::Center)
             .justify_content(JustifyContent::Center)
-            .padding(UiRect::vertical(Val::Px(4.0)))
+            .width(Val::Px(100.0))
+            .padding(UiRect::all(Val::Px(4.0)))
             .border(UiRect::all(Val::Px(1.0)))
             .border_color(text_color)
             .background_color(ui_color_none);
@@ -56,24 +66,11 @@ pub trait TextButtonUiBuilderExt: UiContainerExt {
         builder
     }
 
-    fn medium_text_button<T>(
+    fn menu_page<S, T>(
         &mut self,
-        cfg: &Configs,
-        content: (&str, impl IntoSystem<(), (), T>),
-    ) -> UiBuilder<'_, Entity> {
-        self.text_button(cfg, 1.5, content)
-    }
-}
-
-impl TextButtonUiBuilderExt for UiBuilder<'_, UiRoot> {}
-impl TextButtonUiBuilderExt for UiBuilder<'_, Entity> {}
-
-pub trait MenuUiBuilderExt0: UiColumnExt + UiRowExt + UiContainerExt {
-    fn sub_menu_container<Marker>(
-        &mut self,
-        cfg: &Configs,
-        confirm_text: &str,
-        confirm_action: impl IntoSystem<(), (), Marker>,
+        cfg: &UiConfigs,
+        back: (&str, impl IntoSystem<(), (), S>),
+        next: (&str, impl IntoSystem<(), (), T>),
         spawn_children: impl FnOnce(&mut UiBuilder<Entity>),
     ) -> UiBuilder<'_, Entity> {
         let mut builder = self.column(|column| {
@@ -92,20 +89,8 @@ pub trait MenuUiBuilderExt0: UiColumnExt + UiRowExt + UiContainerExt {
 
             column
                 .row(|row| {
-                    row.medium_text_button(
-                        cfg,
-                        (
-                            "Back",
-                            |mut state: ResMut<NextState<MenuState>>,
-                             mut stack: ResMut<PrevPageStack>| {
-                                if let Some(prev_page) = stack.0.pop() {
-                                    state.set(prev_page)
-                                }
-                            },
-                        ),
-                    );
-
-                    row.medium_text_button(cfg, (confirm_text, confirm_action));
+                    row._button(cfg, back);
+                    row._button(cfg, next);
                 })
                 .style()
                 .width(Val::Percent(100.0))
@@ -121,22 +106,7 @@ pub trait MenuUiBuilderExt0: UiColumnExt + UiRowExt + UiContainerExt {
 
         builder
     }
-    // fn settings_slider(&mut self) -> UiBuilder<'_, Entity> {
-    //     self.column()
-    // }
-
-    // fn settings_text(&mut self) -> UiBuilder<'_, Entity> {
-    //     self
-    // }
-
-    // fn settings_options(&mut self) -> UiBuilder<'_, Entity> {
-    //     self
-    // }
-
-    // fn settings_dropdown(&mut self) -> UiBuilder<'_, Entity> {
-    //     self
-    // }
 }
 
-impl MenuUiBuilderExt0 for UiBuilder<'_, UiRoot> {}
-impl MenuUiBuilderExt0 for UiBuilder<'_, Entity> {}
+impl UiMenuPageExt for UiBuilder<'_, UiRoot> {}
+impl UiMenuPageExt for UiBuilder<'_, Entity> {}

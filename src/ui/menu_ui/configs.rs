@@ -6,14 +6,10 @@ use bevy::{
     reflect::Reflect,
     text::Font,
 };
-use serde::{Deserialize, Serialize};
-
-#[derive(Resource, Clone, Debug, Serialize, Deserialize, Reflect)]
+#[derive(Resource, Clone, Debug)]
 pub struct Configs {
     pub scale: f32,
-    #[serde(skip)]
     pub text: TextConfigs,
-    #[serde(skip)]
     pub menu: MenuConfigs,
 }
 
