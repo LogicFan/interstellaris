@@ -56,12 +56,14 @@ pub(super) fn setup(
                 ..default()
             },
             style: Style {
+                display: Display::Block,
+                position_type: PositionType::Absolute,
                 align_self: AlignSelf::Center,
                 justify_self: JustifySelf::Center,
-                min_height: Val::Vh(100.0),
-                max_height: Val::Vw(ASPECT_RATIO.recip() * 100.0),
                 min_width: Val::Vw(100.0),
-                max_width: Val::Vh(ASPECT_RATIO * 100.0),
+                height: Val::Vw(ASPECT_RATIO.recip() * 100.0),
+                min_height: Val::Vh(100.0),
+                width: Val::Vh(ASPECT_RATIO * 100.0),
                 aspect_ratio: Some(ASPECT_RATIO),
                 ..default()
             },
