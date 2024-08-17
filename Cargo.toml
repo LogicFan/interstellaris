@@ -15,6 +15,7 @@ opt-level = 3
 # bevy game engine
 bevy = { version = "0.14", features = ["serialize"] }
 bevy_mod_picking = "0.20"
+bevy_picking_ui = "0.20"
 sickle_ui = { rev = "c7e84de", git = "https://github.com/UmbraLuminosa/sickle_ui" } # ready
 # bevy_editor_pls = "*" # waiting support for 0.14
 # rust random

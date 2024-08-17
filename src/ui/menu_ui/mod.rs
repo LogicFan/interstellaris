@@ -1,12 +1,7 @@
 //! The menu UI.
 
 mod configs;
-// mod load_game_page;
 mod main_page;
-// mod new_game_page;
-// mod online_game_page;
-// mod settings_page;
-// mod menu_page;
 mod menu_pages;
 mod wallpaper;
 
@@ -47,9 +42,12 @@ impl Plugin for InMenuPlugin {
                     .run_if(on_timer(Duration::from_secs(10)).and_then(in_state(AppStateLoading))),
             )
             .add_systems(OnEnter(MenuState::MainPage), main_page::setup)
-            .add_systems(OnEnter(MenuState::NewGamePage), menu_pages::setup_new_game_page);
-            // .add_systems(OnEnter(MenuState::LoadGamePage), spawn_load_game_menu)
-            // .add_systems(OnEnter(MenuState::OnlineGamePage), spawn_online_menu)
-            // .add_systems(OnEnter(MenuState::SettingsPage), spawn_settings_menu);
+            .add_systems(
+                OnEnter(MenuState::NewGamePage),
+                menu_pages::setup_new_game_page,
+            );
+        // .add_systems(OnEnter(MenuState::LoadGamePage), spawn_load_game_menu)
+        // .add_systems(OnEnter(MenuState::OnlineGamePage), spawn_online_menu)
+        // .add_systems(OnEnter(MenuState::SettingsPage), spawn_settings_menu);
     }
 }

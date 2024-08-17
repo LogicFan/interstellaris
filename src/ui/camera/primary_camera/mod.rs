@@ -19,9 +19,10 @@
 use bevy::core_pipeline::{bloom::BloomSettings, tonemapping::Tonemapping};
 use bevy::prelude::*;
 mod free_motion;
-use super::CameraMotionSystemSet;
 pub use crate::ui::settings::InputSettings;
-pub use free_motion::FreeMotionCtrl as PrimCamFreeMotion;
+pub use free_motion::Controller as PrimCamFreeMotion;
+
+use super::CameraSet;
 
 /// The marker component of primary camera.
 #[derive(Component, Copy, Clone, Default, Debug)]
@@ -50,9 +51,7 @@ pub struct PrimaryCameraPlugin;
 
 impl Plugin for PrimaryCameraPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(PreStartup, setup).add_systems(
-            Update,
-            free_motion::run.in_set(CameraMotionSystemSet::PrimaryCamera),
-        );
+        app.add_systems(PreStartup, setup)
+            .add_systems(Update, free_motion::slide.in_set(CameraSet::Motion));
     }
 }

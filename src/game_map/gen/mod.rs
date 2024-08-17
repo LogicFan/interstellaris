@@ -4,7 +4,6 @@ use super::planetary_system::gen::spawn_planetary_systems;
 use super::{BoundingSize, Coordinate};
 use crate::states::AppStateLoading;
 use crate::ui::camera::PrimCamFreeMotion;
-use crate::ui::confine_pointer;
 use crate::utils::{ObjectId, ObjectRef};
 use crate::{states::LoadSource, ui::PrimaryCamera, AppState};
 use bevy::prelude::*;
@@ -31,7 +30,7 @@ pub fn setup_primary_camera(
         commands
             .entity(camera)
             .insert(Coordinate::Galaxy(ObjectRef::new(entity, *object_id)))
-            .insert(PrimCamFreeMotion::new(size.0.xy()));
+            .insert(PrimCamFreeMotion { half_size: size.0 });
         break;
     }
 }
@@ -45,9 +44,6 @@ impl Plugin for GampMapGenPlugin {
                 handle_galaxy_gen_task.run_if(in_state(GenState::InitGalaxy)),
             )
             .add_systems(OnEnter(GenState::InitPlnSys), spawn_planetary_systems)
-            .add_systems(
-                OnExit(AppStateLoading),
-                (setup_primary_camera, confine_pointer),
-            );
+            .add_systems(OnExit(AppStateLoading), setup_primary_camera);
     }
 }
