@@ -51,7 +51,9 @@ pub struct PrimaryCameraPlugin;
 
 impl Plugin for PrimaryCameraPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(PreStartup, setup)
-            .add_systems(Update, free_motion::slide.in_set(CameraSet::Motion));
+        app.add_systems(PreStartup, setup).add_systems(
+            Update,
+            (free_motion::slide, free_motion::zoom).in_set(CameraSet::Motion),
+        );
     }
 }

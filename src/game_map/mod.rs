@@ -28,4 +28,12 @@ impl Deref for Coordinate {
 }
 
 #[derive(Component, Copy, Clone, Debug)]
-pub struct BoundingSize(pub Vec3);
+pub struct BoundingSize {
+    pub half_size: Vec3,
+}
+
+impl BoundingSize {
+    pub fn new(half_size: Vec3) -> Self {
+        Self { half_size }
+    }
+}

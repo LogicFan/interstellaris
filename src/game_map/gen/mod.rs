@@ -30,7 +30,7 @@ pub fn setup_primary_camera(
         commands
             .entity(camera)
             .insert(Coordinate::Galaxy(ObjectRef::new(entity, *object_id)))
-            .insert(PrimCamFreeMotion { half_size: size.0 });
+            .insert(PrimCamFreeMotion { half_size: size.half_size });
         break;
     }
 }

@@ -1,6 +1,6 @@
 use super::{default_button_back_action, MenuState, UiCamera, UiConfigs, UiMenuPageExt};
 use crate::{
-    game_map::galaxy::{gen::GalaxyGenParams, Galaxy},
+    game_map::galaxy::{gen::GalaxyGenParams, Galaxy, PrimaryGalaxy},
     states::LoadSource,
     ui::menu_ui::AppState,
 };
@@ -45,5 +45,5 @@ pub fn setup(
 fn button_next_action(mut commands: Commands, mut app_state: ResMut<NextState<AppState>>) {
     app_state.set(AppState::Loading(LoadSource::Generation));
     // entity for galaxy generation
-    commands.spawn((Galaxy, GalaxyGenParams::default()));
+    commands.spawn((Galaxy, PrimaryGalaxy, GalaxyGenParams::default()));
 }

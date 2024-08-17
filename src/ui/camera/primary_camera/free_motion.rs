@@ -17,9 +17,8 @@
 //! - if camera is in the `half_size`, then the rotation is not restricted
 //! - otherwise, the rotation is constrained by tan^(-1) ((half_size.x - x) / z).
 use super::PrimaryCamera;
-use crate::ui::input::ParsedMouseInput;
+use crate::ui::input::{MouseMotion, MouseWheel};
 use bevy::prelude::*;
-use bevy::window::PrimaryWindow;
 
 #[derive(Component, Copy, Clone, Default, Debug)]
 pub struct Controller {
@@ -31,34 +30,73 @@ pub struct Controller {
 /// [PostUpdate], we want to move it after all ray-cast
 /// computation are completed.
 pub fn slide(
-    mut q_camera: Query<&mut Transform, (With<PrimaryCamera>, With<Controller>)>,
-    input: Res<ParsedMouseInput>,
+    mut q_camera: Query<(&mut Transform, &Projection, &Controller), With<PrimaryCamera>>,
+    time: Res<Time<Real>>,
+    input: Res<MouseMotion>,
 ) {
-    if let Some(mut transform) = q_camera.get_single_mut().ok() {
-        let delta = transform.local_x().xy().normalize() * input.on_border.x
-            - transform.local_y().xy().normalize() * input.on_border.y;
+    if let Some((mut transform, proj, ctrl)) = q_camera.get_single_mut().ok() {
+        let constraint = {
+            let h = (transform.translation.z - ctrl.half_size.z).max(0.0);
+            let padding = match proj {
+                Projection::Perspective(p) => {
+                    let v_theta = 0.5 * p.fov;
+                    let v_padding = v_theta.tan() * h;
+                    Vec2::new(v_padding * p.aspect_ratio, v_padding)
+                }
+                Projection::Orthographic(_) => {
+                    panic!("Unexpected camera projection, orthographic.")
+                }
+            };
+            (ctrl.half_size.xy() - padding).max(Vec2::ZERO)
+        };
 
-        transform.translation.x += delta.x;
-        transform.translation.y += delta.y;
+        let mut delta = Vec2::ZERO;
+        delta += transform.local_x().xy().normalize() * input.on_border.x;
+        delta -= transform.local_y().xy().normalize() * input.on_border.y;
+        // TODO: variable speed based on height
+        delta *= time.delta().as_secs_f32() * 100.0;
+
+        let new_translation = (transform.translation.xy() + delta).clamp(-constraint, constraint);
+
+        transform.translation.x = new_translation.x;
+        transform.translation.y = new_translation.y;
     }
 }
 
-// /// Control the [PrimaryCamera] horizontal movement (a.k.a slide).
-// /// # Schedule
-// /// [PostUpdate], we want to move it after all ray-cast
-// /// computation are completed.
-// pub fn slide(
-//     mut q_camera: Query<&mut Transform, (With<PrimaryCamera>, With<Controller>)>,
-//     input: Res<ParsedMouseInput>,
-// ) {
-//     if let Some(mut transform) = q_camera.get_single_mut().ok() {
-//         let delta = transform.local_x().xy().normalize() * input.on_border.x
-//             - transform.local_y().xy().normalize() * input.on_border.y;
+/// Control the [PrimaryCamera] zoom movement.
+/// # Schedule
+/// [PostUpdate], we want to move it after all ray-cast
+/// computation are completed.
+pub fn zoom(
+    mut q_camera: Query<(&mut Transform, &Projection, &Controller), With<PrimaryCamera>>,
+    input: Res<MouseWheel>,
+) {
+    if let Some((mut transform, proj, ctrl)) = q_camera.get_single_mut().ok() {
+        let constraint = {
+            let h = match proj {
+                Projection::Perspective(p) => {
+                    let v_theta = 0.5 * p.fov;
+                    f32::min(
+                        ctrl.half_size.y / v_theta.tan(),
+                        ctrl.half_size.x / (v_theta.tan() * p.aspect_ratio),
+                    )
+                }
+                Projection::Orthographic(_) => {
+                    panic!("Unexpected camera projection, orthographic.")
+                }
+            };
 
-//         transform.translation.x += delta.x;
-//         transform.translation.y += delta.y;
-//     }
-// }
+            (-ctrl.half_size.z, ctrl.half_size.z + h * 0.8)
+        };
+
+        let local_z = transform.local_z();
+        let delta = (-input.scroll.y).clamp(
+            (constraint.0 - transform.translation.z) / local_z.z,
+            (constraint.1 - transform.translation.z) / local_z.z,
+        );
+        transform.translation += local_z * delta;
+    }
+}
 
 // /// Control the [PrimaryCamera] horizontal movement (a.k.a slide).
 // /// # Schedule

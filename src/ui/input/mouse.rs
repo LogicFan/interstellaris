@@ -1,3 +1,4 @@
+use super::parsed::{MouseMotion as MouseMotion2, MouseWheel as MouseWheel2};
 use crate::ui::PrimaryCamera;
 use bevy::{
     input::{
@@ -13,8 +14,6 @@ use bevy_mod_picking::{
     prelude::{Pickable, PointerButton, PointerId, PointerLocation},
     PointerBundle,
 };
-
-use super::parsed::ParsedMouseInput;
 
 #[derive(Component, Copy, Clone, Debug)]
 pub struct UiPointer;
@@ -35,6 +34,7 @@ pub(super) fn setup(
         .get_single_mut()
         .expect("Fail to find primary window.");
 
+    // spawn the pointer ui
     let texture = assets.load("menu_ui/mouse/cursor.png");
     commands.spawn((
         ImageBundle {
@@ -53,6 +53,7 @@ pub(super) fn setup(
         Pickable::IGNORE,
     ));
 
+    // spawn the pointer entity
     commands.spawn((PointerBundle::new(PointerId::Mouse), MousePointer));
 
     window.1.cursor.visible = false;
@@ -62,28 +63,26 @@ pub(super) fn setup(
 pub(super) fn post_setup(
     q_window: Query<(Entity, &Window), With<PrimaryWindow>>,
     mut ew_motion: EventWriter<InputMove>,
-    mut parsed: ResMut<ParsedMouseInput>,
+    mut motion: ResMut<MouseMotion2>,
 ) {
     let window = q_window.get_single().expect("Fail to find primary window.");
     let viewport = Vec2::new(window.1.width(), window.1.height()) - 1.0;
-    parsed.refresh_motion(viewport);
+    motion.refresh(viewport);
 
     // move the pointer to the center of the screen
     let center = 0.5 * Vec2::new(window.1.width(), window.1.height());
-    let delta = parsed.set_motion(center);
-    
+    let delta = motion.add_delta(center);
     ew_motion.send(InputMove::new(
         PointerId::Mouse,
         Location {
             target: RenderTarget::Window(WindowRef::Primary)
                 .normalize(Some(window.0))
                 .unwrap(),
-            position: parsed.position,
+            position: motion.position,
         },
         delta,
     ));
-
-    parsed.update_motion();
+    motion.post_update();
 }
 
 /// Convert mouse motion events.
@@ -93,34 +92,38 @@ pub(super) fn motion(
     q_window: Query<(Entity, &Window), With<PrimaryWindow>>,
     mut er_motion: EventReader<MouseMotion>,
     mut ew_motion: EventWriter<InputMove>,
-    mut parsed: ResMut<ParsedMouseInput>,
+    mut motion: ResMut<MouseMotion2>,
 ) {
     let window = q_window
         .get_single()
         .expect("Fail to find primary window in Bevy");
     let viewport = Vec2::new(window.1.width(), window.1.height()) - 1.0;
-    parsed.refresh_motion(viewport);
-
+    motion.refresh(viewport);
     for event in er_motion.read() {
-        let delta = parsed.set_motion(event.delta);
-
+        let delta = motion.add_delta(event.delta);
         ew_motion.send(InputMove::new(
             PointerId::Mouse,
             Location {
                 target: RenderTarget::Window(WindowRef::Primary)
                     .normalize(Some(window.0))
                     .unwrap(),
-                position: parsed.position,
+                position: motion.position,
             },
             delta,
         ));
     }
-
-    parsed.update_motion();
+    motion.post_update();
 }
 
-pub(super) fn wheel(mut er_wheel: EventReader<MouseWheel>, mut parsed: ResMut<ParsedMouseInput>) {
-    for event in er_wheel.read() {}
+pub(super) fn wheel(mut er_wheel: EventReader<MouseWheel>, mut wheel: ResMut<MouseWheel2>) {
+    wheel.refresh();
+    for event in er_wheel.read() {
+        let factor = match event.unit {
+            bevy::input::mouse::MouseScrollUnit::Line => 8.0,
+            bevy::input::mouse::MouseScrollUnit::Pixel => 1.0,
+        };
+        wheel.add_delta(Vec2::new(event.x, event.y) * factor);
+    }
 }
 
 /// Convert mouse button events.
@@ -139,7 +142,6 @@ pub(super) fn button(
             MouseButton::Back => continue,
             MouseButton::Forward => continue,
         };
-
         match event.state {
             ButtonState::Pressed => {
                 ew_button.send(InputPress::new_down(PointerId::Mouse, button));

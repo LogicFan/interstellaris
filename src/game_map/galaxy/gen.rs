@@ -90,7 +90,7 @@ pub fn handle_galaxy_gen_task(
                 .entity(entity)
                 .remove::<GalaxyGenParams>()
                 .remove::<GenTask>()
-                .insert(BoundingSize(xyz))
+                .insert(BoundingSize::new(xyz))
                 .insert(ObjectId::default());
 
             for params in planetary_systems {
