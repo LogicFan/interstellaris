@@ -50,11 +50,14 @@ pub fn slide(
             (ctrl.half_size.xy() - padding).max(Vec2::ZERO)
         };
 
+        let speed = 100.0 + (transform.translation.z - ctrl.half_size.z).max(0.0) * 1.0;
+
         let mut delta = Vec2::ZERO;
         delta += transform.local_x().xy().normalize() * input.on_border.x;
         delta -= transform.local_y().xy().normalize() * input.on_border.y;
+
         // TODO: variable speed based on height
-        delta *= time.delta().as_secs_f32() * 100.0;
+        delta *= time.delta().as_secs_f32() * speed;
 
         let new_translation = (transform.translation.xy() + delta).clamp(-constraint, constraint);
 
@@ -97,58 +100,6 @@ pub fn zoom(
         transform.translation += local_z * delta;
     }
 }
-
-// /// Control the [PrimaryCamera] horizontal movement (a.k.a slide).
-// /// # Schedule
-// /// [PostUpdate], we want to move it after all ray-cast
-// /// computation are completed.
-// pub fn constraint(
-//     mut q_camera: Query<(&mut Transform, &Controller), With<PrimaryCamera>>,
-//     input: Res<ParsedMouseInput>,
-// ) {
-//     if let Some((mut transform, ctrl)) = q_camera.get_single_mut().ok() {
-
-//         let delta = transform.local_x().xy().normalize() * input.on_border.x
-//             - transform.local_y().xy().normalize() * input.on_border.y;
-
-//         transform.translation.x += delta.x;
-//         transform.translation.y += delta.y;
-//     }
-// }
-
-// /// Control primary camera zoom.
-// /// # Schedule
-// /// `PostUpdate`, if `is_free_motion` is true.
-// pub fn zoom_main_camera(
-//     mut q_camera: Query<&mut Transform, With<PrimaryCamera>>,
-//     mut e_mouse_wheel: EventReader<MouseWheel>,
-//     r_motion_mode: Res<MotionMode>,
-//     r_settings: Res<InputSettings>,
-// ) {
-//     let (min_h, max_h) = match *r_motion_mode {
-//         MotionMode::FreeMotion { min_h, max_h, .. } => (min_h, max_h),
-//         other => panic!("Unexpected value {:?}", other),
-//     };
-
-//     let mut transform = q_camera.single_mut();
-
-//     use bevy::input::mouse::MouseScrollUnit;
-//     for e in e_mouse_wheel.read() {
-//         let mut dz = match e.unit {
-//             MouseScrollUnit::Line => -e.y,
-//             MouseScrollUnit::Pixel => -e.y,
-//         };
-
-//         // apply sensitivity settings
-//         dz *= r_settings.mouse_scroll_sensitivity;
-
-//         // apply constraint
-//         let mut z = transform.translation.z + dz;
-//         z = z.clamp(min_h, max_h);
-
-//         transform.translation.z = z;
-//     }
-// }
 
 // /// Control primary camera rotation.
 // /// # Schedule
