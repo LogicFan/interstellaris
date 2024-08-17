@@ -55,8 +55,6 @@ pub fn slide(
         let mut delta = Vec2::ZERO;
         delta += transform.local_x().xy().normalize() * input.on_border.x;
         delta -= transform.local_y().xy().normalize() * input.on_border.y;
-
-        // TODO: variable speed based on height
         delta *= time.delta().as_secs_f32() * speed;
 
         let new_translation = (transform.translation.xy() + delta).clamp(-constraint, constraint);
